@@ -1,17 +1,42 @@
 <?php
-echo "asasa";
+session_start();
+if ((isset($_SESSION['zalogowany']))&&($_SESSION['zalogowany']==true))
+{
+    header('Location: start.php');
+    exit();
 
-error_reporting(-1);
-ini_set('display_errors', 'On');
-
-$con=mysqli_connect("localhost","root","jajuzniepije12345","baza_motocykle");
-echo "hjkhjkhkj";
-
-if($con->connect_error){
-    echo "Błąd przy łączeniu z bazą danych";
 }
-else{
-    echo "Wygrałeś życie";
-}
-
 ?>
+
+
+
+
+<!DOCTYPE HTML>
+<html lang="pl">
+<head>
+    <meta charset="utf8" />
+    <meta http-equiv="X-UA_Compatabile" content="IE=edge,chrome=1" />
+    <title>Sprawdz motocykl</title>
+</head>
+
+<body>
+Sprawdz sie <br /><br />
+
+<form action="login.php" method="post">
+
+    Login: <br /><input type="text" name="login" /><br/>
+    Hasło: <br /><input type="password" name="haslo" /><br/><br/>
+    <input type="submit" value="Zaloguj się" />
+
+
+</form>
+<?php
+if(isset($_SESSION['blad']))
+    echo $_SESSION['blad'];
+?>
+
+
+</body>
+</html>
+
+
