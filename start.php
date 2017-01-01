@@ -1,25 +1,49 @@
 <?php
 
-session_start();
+header("Cache-Control: no-store, no-cache, must-revalidate");
+header("Cache-Control: post-check=0, pre-check=0, max-age=0", false);
+header("Pragma: no-cache");
 
-if(!isset($_SESSION['zalogowany']))
-{
-    header('location: index.php');
-}
+if(!isset($_COOKIE['id']))
+    header('Location: index.php');
+
+include_once "funkcje.php";
+require_once "polacz.php";
+
+include_once "skrypty/sprawdz_logowanie.php";
+
 ?>
 
 <!DOCTYPE HTML>
-    <html lang="pl">
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1" />
-    <title>Sprawdź swój motocykl</title>
-</head>
+    <html lang="pl_PL">
+
 <?php
-echo "<p>Witaj ".$_SESSION['login'].'![<a href="logout.php">Wyloguj się!</a>]</p>';
-echo "<p>pusta strona</p>";
-echo "<p>tu nic nie ma</p>";
-echo "<p>ale się pojawi...</p>";
-echo "<p>KIEDYŚ!!!</p>";
+include_once "header.php";
+
+
 ?>
+    <body>
+    <?php
+    include_once "menu.php";
+    require_once "polacz.php";
+
+    if(isset($_COOKIE['error'])) {
+        echo "<div class=\"error\" id=\"error\" >";
+        echo $_COOKIE['error'];
+        setcookie("error", 0, time() - 60, '/');
+        unset($_COOKIE['error']);
+        echo"</div>";
+    }
+
+    $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("brak połączenia z bazą");
+    $wynik=mysqli_fetch_assoc(mysqli_query($link,"Select model, zdjecie from MOTOCYKL where model='R1';"));
+    $zdjecie=$wynik['zdjecie'];
+
+
+    echo "<img src=\"$zdjecie\" width='100' height='100'> ";
+    ?>
+
+
+
+    </body>
 </html>

@@ -1,39 +1,52 @@
 <?php
-session_start();
-if ((isset($_SESSION['zalogowany']))&&($_SESSION['zalogowany']==true))
-{
+if(isset($_COOKIE['id']))
     header('Location: start.php');
-    exit();
-
-}
 ?>
-
-
-
-
 <!DOCTYPE HTML>
 <html lang="pl">
-<head>
-    <meta charset="utf8" />
-    <meta http-equiv="X-UA_Compatabile" content="IE=edge,chrome=1" />
-    <title>Sprawdz motocykl</title>
-</head>
+
+<?php
+//lg md sm xs
+include_once "header.php";
+?>
 
 <body>
-Sprawdz sie <br /><br />
 
-<form action="login.php" method="post">
+<?php
+include_once "menu2.php";
+?>
 
-    Login: <br /><input type="text" name="login" /><br/>
-    Hasło: <br /><input type="password" name="haslo" /><br/><br/>
-    <input type="submit" value="Zaloguj się" />
 
+    <?php
+    if(isset($_COOKIE['error'])) {
+        echo "<div class=\"error\" id=\"error\" >";
+        echo $_COOKIE['error'];
+        setcookie("error", 0, time() - 60, '/');
+        unset($_COOKIE['error']);
+        echo"</div>";
+    }
+    ?>
+
+<div class="container max-container">
+<div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 max-div center">
+
+<form class="pagination" action="login.php" method="post" role="form" style="background: rgba(177, 177, 177, 0.9)">
+
+   <div class="form-group" >
+       <label for="input1">Login:</label><br>
+       <input class="form-control" id="input1" type="text" name="login" required/><br>
+   </div>
+   <div class="form-group">
+       <label for="input2">Hasło:</label><br>
+       <input class="form-control" id="input2" type="password" name="haslo" required/><br>
+   </div>
+   <button type="submit" class="btn btn-default center-block" >Zaloguj się!</button><br>
+    <div class="form-group text-center">
+    <a class="a" href="rejestracja.php">Zarejestruj się</a></div>
 
 </form>
-<?php
-if(isset($_SESSION['blad']))
-    echo $_SESSION['blad'];
-?>
+        </div>
+</div>
 
 
 </body>
