@@ -1,6 +1,6 @@
 <?php
 
-require_once("polacz.php");
+require("polacz.php");
 
 $link = mysqli_connect($db_host,$db_uzytkownik,$db_haslo,$db_nazwa);
 mysqli_query($link,"SET CHARSET utf8");

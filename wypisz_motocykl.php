@@ -32,6 +32,7 @@ $model=mysqli_real_escape_string($link,$_GET['model']);
 $rok=mysqli_real_escape_string($link,$_GET['rok']);
 
 
+// pobranie podstawowych danych o motocyklu
 $q=mysqli_query($link,"Select * from dane_motocykl where Model='{$model}' and Rok_produkcji={$rok};");
 if ($q->num_rows != 1) {
     setcookie("error","Nie ma takiego motocykla",time()+3600*24,"/");
@@ -39,6 +40,20 @@ if ($q->num_rows != 1) {
     exit();
 }
 $wynik=mysqli_fetch_assoc($q);
+
+
+//pobranie dodatkowych danych o motocyklu
+
+//TO-DO - trzeba joinowac parametr i wartosc_parametru
+// nastepnie trzeba zrobic select z tego i pobrac nazwe i wartosc
+// while fetch assoc i wypisać
+
+$w=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from PARAMETR natural join WART_PARAMETRU where Id_motocykla={$wynik['Id_motocykla']}");
+
+
+
+
+
 ?>
 <div class="container max-container" style="width: 100%">
     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 max-div">
@@ -69,8 +84,13 @@ $wynik=mysqli_fetch_assoc($q);
         <ul class="list-group">
 
             <?php
-            echo "<li class=\"list-group-item text-center\" >DANE DODATKOWE</li>";
-
+            if($w->num_rows>0) {
+                echo "<li class=\"list-group-item text-center\" >DANE DODATKOWE</li>";
+                while($dana=mysqli_fetch_assoc($w))
+                {
+                    echo "<li class=\"list-group-item\">{$dana['nazwa_parametru']}: {$dana['wartosc_parametru']}</li>";
+                }
+            }
             ?>
         </ul>
      </div>

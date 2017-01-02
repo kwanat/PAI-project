@@ -42,7 +42,7 @@ $wynik=mysqli_query($link,"Select Zdjecie, Model, Rok_produkcji from dane_motocy
 ?>
 <div class="container max-container">
     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 max-div">
-
+<div style="overflow: auto">
         <table class="table">
             <tr>
                 <th>Zdjęcie</th>
@@ -52,10 +52,10 @@ $wynik=mysqli_query($link,"Select Zdjecie, Model, Rok_produkcji from dane_motocy
 
             <?php
             while($mot=mysqli_fetch_assoc($wynik)){
-                echo " <tr>
-                <td><img src=\"{$mot['Zdjecie']}\" width='100px'></td>
-                <td><a style=\"color: black\" class=\"link\" href=\"wypisz_motocykl.php?model ={$mot['Model']}&rok={$mot['Rok_produkcji']}\">{$mot['Model']}</a></td>
-                <td>{$mot['Rok_produkcji']}</td>
+                echo " <tr style='font-size: 20px'>
+                <td style='vertical-align: middle'><img src=\"{$mot['Zdjecie']}\" width='100px'></td>
+                <td style='vertical-align: middle'><a style=\"color: black\" class=\"link\" href=\"wypisz_motocykl.php?model={$mot['Model']}&rok={$mot['Rok_produkcji']}\">{$mot['Model']}</a></td>
+                <td style='vertical-align: middle'>{$mot['Rok_produkcji']}</td>
             </tr>";
             }
 
@@ -64,6 +64,7 @@ $wynik=mysqli_query($link,"Select Zdjecie, Model, Rok_produkcji from dane_motocy
 
 
         </table>
+    </div>
 </div>
     </div>
 

@@ -1,18 +1,11 @@
 <?php
-echo "test1";
 include_once "funkcje.php";
-
 require_once "polacz.php";
-echo "test";
 
-$link = @new mysqli($db_host,$db_uzytkownik,$db_haslo,$db_nazwa);
 
-if($link->connect_errno!=0)
-{
-    echo "Błąd: ".$link->connect_errno;
-    exit();
-}
-else if(!$link->set_charset("utf8"))
+$link = @new mysqli($db_host,$db_uzytkownik,$db_haslo,$db_nazwa)or die("błąd połączenia z bazą");
+
+if(!$link->set_charset("utf8"))
 {
     echo "Błąd podczas ładowania kodowania utf8".$link->error;
     exit();
@@ -20,7 +13,7 @@ else if(!$link->set_charset("utf8"))
 
 
 else {
-    echo "połączono\n";
+
     $login = $_POST['login'];
     $haslo = $_POST['haslo'];
     $haslo2 = $_POST['haslo2'];

@@ -34,13 +34,20 @@ include_once "header.php";
         unset($_COOKIE['error']);
         echo"</div>";
     }
+    if(isset($_COOKIE['sukces'])) {
+        echo "<div class=\"sukces\" id=\"sukces\" >";
+        echo $_COOKIE['sukces'];
+        setcookie("sukces", 0, time() - 60, '/');
+        unset($_COOKIE['sukces']);
+        echo"</div>";
+    }
 
     $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("brak połączenia z bazą");
     $wynik=mysqli_fetch_assoc(mysqli_query($link,"Select model, zdjecie from MOTOCYKL where model='R1';"));
     $zdjecie=$wynik['zdjecie'];
 
 
-    echo "<img src=\"$zdjecie\" width='100' height='100'> ";
+    //echo "<img src=\"$zdjecie\" width='100' height='100'> ";
     ?>
 
 
