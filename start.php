@@ -43,11 +43,17 @@ include_once "header.php";
     }
 
     $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("brak połączenia z bazą");
-    $wynik=mysqli_fetch_assoc(mysqli_query($link,"Select model, zdjecie from MOTOCYKL where model='R1';"));
-    $zdjecie=$wynik['zdjecie'];
+    mysqli_query($link,"SET CHARSET utf8");
+    mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
-
-    //echo "<img src=\"$zdjecie\" width='100' height='100'> ";
+    $wynik=mysqli_query($link,"Select Id_motocykla  from dane_motocykl;");
+    $liczba=rand(1,$wynik->num_rows);
+    for($i=1;$i<$liczba;$i++)
+    {
+        $dana=mysqli_fetch_assoc($wynik);
+    }
+     $dana=mysqli_fetch_assoc($wynik);
+    include "skrypty/wypiszrandommot.php";
     ?>
 
 

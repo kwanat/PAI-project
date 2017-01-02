@@ -1,39 +1,8 @@
 <?php
 
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0, max-age=0", false);
-header("Pragma: no-cache");
-
-include_once "funkcje.php";
-require_once "polacz.php";
-
-include_once "skrypty/sprawdz_logowanie.php";
-
-?>
-
-<!DOCTYPE HTML>
-<html lang="pl_PL">
-
-<?php
-include_once "header.php";
-
-
-?>
-<body>
-<?php
-include_once "menu.php";
-require_once "polacz.php";
-
-$link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("brak połączenia z bazą");
-mysqli_query($link,"SET CHARSET utf8");
-mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
-
-$model=mysqli_real_escape_string($link,$_GET['model']);
-$rok=mysqli_real_escape_string($link,$_GET['rok']);
-
 
 // pobranie podstawowych danych o motocyklu
-$q=mysqli_query($link,"Select * from dane_motocykl where Model='{$model}' and Rok_produkcji={$rok};");
+$q=mysqli_query($link,"Select * from dane_motocykl where Id_motocykla='{$dana['Id_motocykla']}';");
 if ($q->num_rows != 1) {
     setcookie("error","Nie ma takiego motocykla",time()+3600*24,"/");
     header('Location: start.php');
@@ -91,7 +60,6 @@ $w=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from PARAMETR n
             echo "<li class=\"list-group-item\">{$wynik['Opis']}</li>";
             ?>
         </ul>
-
      </div>
 </div>
 

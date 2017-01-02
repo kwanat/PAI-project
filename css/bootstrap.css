@@ -1102,7 +1102,9 @@ body {
   color: black;
   background-color: #fff;
   background-image: url("background.jpeg");
-  background-size: 100%
+  background-size: 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 input,
 button,

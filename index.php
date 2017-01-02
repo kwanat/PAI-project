@@ -26,6 +26,15 @@ include_once "menu2.php";
         echo"</div>";
     }
     ?>
+<?php
+if(isset($_COOKIE['sukces'])) {
+    echo "<div class=\"sukces\" id=\"sukces\" >";
+    echo $_COOKIE['sukces'];
+    setcookie("sukces", 0, time() - 60, '/');
+    unset($_COOKIE['sukces']);
+    echo"</div>";
+}
+?>
 
 <div class="container max-container">
 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 max-div center">
