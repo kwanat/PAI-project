@@ -46,8 +46,8 @@
               <li class=\"divider\"></li>";
                 }
                 else if($uprawnienia['ID_poziomu_uprawnien']==2){
-                  echo"<li><a href=\"zmiendane.php\">Dodaj motocykl</a></li>
-              <li><a href=\"zmienhaslo.php\">Modyfikuj motocykl</a></li>
+                  echo"<li><a href=\"dodajmoto.php\">Dodaj motocykl</a></li>
+              <li><a href=\"modyfikujmoto.php\">Modyfikuj motocykl</a></li>
               <li class=\"divider\"></li>";
                 }
               }

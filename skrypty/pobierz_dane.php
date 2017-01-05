@@ -2,7 +2,7 @@
 
 require("polacz.php");
 
-$link = mysqli_connect($db_host,$db_uzytkownik,$db_haslo,$db_nazwa);
+$link = mysqli_connect($db_host,$db_uzytkownik,$db_haslo,$db_nazwa) or die("błąd połączenia z bazą danych");
 mysqli_query($link,"SET CHARSET utf8");
 mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 foreach ($_COOKIE as $k=>$v) {

@@ -1,9 +1,8 @@
 <?php
-echo"test2";
+
 require "./../polacz.php";
-echo "test3";
 include "pobierz_dane.php";
-echo"test1";
+
 
 $link = @new mysqli($db_host,$db_uzytkownik,$db_haslo,$db_nazwa)or die("błąd połączenia z bazą");
 echo"test";
