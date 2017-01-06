@@ -1,6 +1,7 @@
 <?php
 //TODO
 // Ogarnąć wyświetlanie bo się sypie strasznie
+// Dodać możliwość dodania innych atrybutów
 
 
 if(!isset($_COOKIE['id']))
@@ -12,15 +13,14 @@ include_once "header.php";
 <?php
 include_once "menu.php";
 ?>
-<?php
-if(isset($_COOKIE['error'])) {
-    echo "<div class=\"error\" id=\"error\" >";
-    echo $_COOKIE['error'];
-    setcookie("error", 0, time() - 60, '/');
+<div class="error" id="error" style="display: none">
+    <?php
+    if(isset($_COOKIE['error']))
+        echo $_COOKIE['error'];
+    setcookie("error", 0, time()-60, '/');
     unset($_COOKIE['error']);
-    echo"</div>";
-}
-?>
+    ?>
+</div>
 <?php
 if(isset($_COOKIE['sukces'])) {
     echo "<div class=\"sukces\" id=\"sukces\" >";
@@ -60,7 +60,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
     <div class="form-group" id="Markadiv" style="display: none">
         <label for="Markanowa">Podaj nazwę marki:</label><br>
-        <input class="form-control" id="Markanowa" type="text" name="Markanowa"/>
+        <input class="form-control" id="Markanowa" type="text" name="Markanowa" onblur="sprawdzdane()"/>
     </div>
 
     <div class="form-group" >
@@ -82,7 +82,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
     <div class="form-group" id="Rokdiv" style="display: none">
         <label for="Roknowy">Podaj rok:</label><br>
-        <input class="form-control" id="Roknowy" type="text" name="Roknowy"/>
+        <input class="form-control" id="Roknowy" type="text" name="Roknowy" onblur="sprawdzdane()"/>
     </div>
 
     <div class="form-group" >
@@ -99,7 +99,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
     <div class="form-group" id="Napeddiv" style="display: none">
         <label for="Napednowy">Podaj rodzaj napędu:</label><br>
-        <input class="form-control" id="Napednowy" type="text" name="Napednowy"/>
+        <input class="form-control" id="Napednowy" type="text" name="Napednowy"onblur="sprawdzdane()"/>
     </div>
 
 
@@ -117,7 +117,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
     <div class="form-group" id="Typdiv" style="display: none">
         <label for="Typnowy">Podaj typ motocykla:</label><br>
-        <input class="form-control" id="Typnowy" type="text" name="Typnowy"/>
+        <input class="form-control" id="Typnowy" type="text" name="Typnowy" onblur="sprawdzdane()"/>
     </div>
 
     <div class="form-group" >
@@ -134,7 +134,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
     <div class="form-group" id="Pojemnoscdiv" style="display: none">
         <label for="Pojemnoscnowa">Podaj pojemność:</label><br>
-        <input class="form-control" id="Pojemnoscnowa" type="text" name="Pojemnoscnowa"/>
+        <input class="form-control" id="Pojemnoscnowa" type="text" name="Pojemnoscnowa" onblur="sprawdzdane()"/>
     </div>
 
     <div class="form-group" >
@@ -151,7 +151,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
     <div class="form-group" id="Suwdiv" style="display: none">
         <label for="Suwnowy">Podaj ilość suwów:</label><br>
-        <input class="form-control" id="Suwnowy" type="text" name="Suwnowy"/>
+        <input class="form-control" id="Suwnowy" type="text" name="Suwnowy" onblur="sprawdzdane()"/>
     </div>
 
     <div class="form-group" >
@@ -168,7 +168,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
     <div class="form-group" id="Cylinderdiv" style="display: none">
         <label for="Cylindernowy">Podaj ilość cylindrówi:</label><br>
-        <input class="form-control" id="Cylindernowy" type="text" name="Cylindernowy"/>
+        <input class="form-control" id="Cylindernowy" type="text" name="Cylindernowy" onblur="sprawdzdane()"/>
     </div>
 
     <div class="form-group" >
@@ -181,7 +181,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
         <textarea id="Opis" name="Opis"></textarea>
     </div>
 
-    <button type="submit" class="btn btn-default center-block" >Dodaj motocykl!</button><br>
+    <button type="submit" id="submitbutton" class="btn btn-default center-block" >Dodaj motocykl!</button><br>
 
 
 </form>
@@ -204,8 +204,86 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
         else {
             document.getElementById(divzmiana).style.display = "none";
             document.getElementById(nowawartosc).required=false;
+            document.getElementById(nowawartosc).value="";
+            sprawdzdane();
+
         }
 
     }
+    function sprawdzdane(){
 
+        if(!sprawdzdanetekstowe('Markanowa','marka','Markadiv'))
+            return false;
+        if(!sprawdzdaneliczbowe('Roknowy','rok','Rokdiv'))
+            return false;
+        if(!sprawdzdanetekstowe('Napednowy','naped','Napeddiv'))
+            return false;
+        if(!sprawdzdanetekstowe('Typnowy','typmotocykla','Typdiv'))
+            return false;
+        if(!sprawdzdaneliczbowe('Pojemnoscnowa','pojemność','Pojemnoscdiv'))
+            return false;
+        if(!sprawdzdaneliczbowe('Suwnowy','liczba suwów','Suwdiv'))
+            return false;
+        if(!sprawdzdaneliczbowe('Cylindernowy','liczba cylindrów','Cylinderdiv'))
+            return false;
+
+    }
+
+    function sprawdzdanetekstowe(id,nazwapola,divpop)
+    {
+        var regexp =/^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]{0,}$/;
+        if(!regexp.test(document.getElementById(id).value))
+        {
+            document.getElementById("error").innerHTML = "Pole "+nazwapola+" może składać się tylko z liter";
+            document.getElementById("submitbutton").disabled = true;
+            document.getElementById("error").style.display="block";
+            if(document.getElementById(divpop).style.display=="none"){
+                document.getElementById("submitbutton").disabled = false;
+                setTimeout('czysc()',0);
+                return true;
+            }
+           setTimeout('czysc()',3000);
+            return false;
+        }
+        else
+        {
+            document.getElementById("submitbutton").disabled = false;
+            document.getElementById("error").style.display="none";
+            return true;
+        }
+    }
+
+    function sprawdzdaneliczbowe(id,nazwapola,divpop)
+    {
+        var regexp=/^[0-9]{0,}$/;
+        if(!regexp.test(document.getElementById(id).value))
+        {
+            document.getElementById("error").innerHTML = "Pole "+nazwapola+" może składać się tylko z cyfr";
+            document.getElementById("submitbutton").disabled = true;
+            document.getElementById("error").style.display="block";
+            if(document.getElementById(divpop).style.display=="none"){
+                document.getElementById("submitbutton").disabled = false;
+                setTimeout('czysc()',0);
+                return true;
+            }
+            setTimeout('czysc()',3000);
+            return false
+        }
+        else
+        {
+
+            document.getElementById("submitbutton").disabled = false;
+            document.getElementById("error").style.display="none";
+            return true;
+        }
+
+
+    }
+
+    function czysc(){
+        document.getElementById("error").innerHTML = "";
+        document.getElementById("error").style.display="none";
+
+
+    }
     </script>

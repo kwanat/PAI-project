@@ -2268,13 +2268,15 @@ pre code {
   }
 }
 table {
-  background-color: transparent;
+  background: rgba(177, 177, 177, 0.9);
 }
 caption {
   padding-top: 8px;
   padding-bottom: 8px;
-  color: #777;
-  text-align: left;
+  color: black;
+  text-align: center;
+  background: rgba(177, 177, 177, 0.9);
+  border: 1px solid black;
 }
 th {
   text-align: left;

@@ -8,7 +8,7 @@ $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("b
 
 mysqli_query($link,"SET CHARSET utf8");
 mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
-/*
+
 $allowedExts = array("gif", "jpeg", "jpg", "png");
 $temp = explode(".", $_FILES["Zdjecie"]["name"]);
 $extension = end($temp);
@@ -40,7 +40,7 @@ if ((($_FILES["Zdjecie"]["type"] == "image/gif")
     setcookie("error","niepoprawny plik",time()+3600*24,"/");
     header("location: ./../dodajmoto.php");exit();
 }
-*/
+
 foreach ($_POST as $k=>$v) {
     $_POST[$k] = mysqli_real_escape_string($link, $v);
 }
@@ -82,7 +82,7 @@ if($_POST['Cylinder']=='cylinder'){
 
 
 
-/*
+
 $zdjecie="zdjecia/".$_FILES['Zdjecie']['name'];
 if(!mysqli_query($link,"INSERT INTO MOTOCYKL(Id_marki, Model,Id_roku, Id_napedu,Id_typu,Id_pojemnosci,Id_suwu,Id_cylindra,opis,zdjecie,Id_uzytkownika)
 VALUES ({$_POST['Marka']},'{$_POST['Model']}',{$_POST['Rok']},{$_POST['Naped']},{$_POST['Typ']},{$_POST['Pojemnosc']},{$_POST['Suw']},{$_POST['Cylinder']},'{$_POST['Opis']}','{$zdjecie}',{$dane['Id_uzytkownika']});")) {
@@ -94,6 +94,6 @@ else{
     header("location: ./../dodajmoto.php");exit();
 }
 
-*/
+
 
 ?>
