@@ -23,7 +23,7 @@ include_once "menu2.php";
 
 
 
-<form class="pagination" action="rejestrujdo.php" role="form" method="post" style="background: rgba(177, 177, 177, 0.9)">
+<form id="rejestracja" class="pagination" action="rejestrujdo.php" role="form" method="post" style="background: rgba(177, 177, 177, 0.9)">
 
     <div class="form-group" >
         <label for="login">Login:</label><br>
@@ -77,11 +77,27 @@ include_once "menu2.php";
 
 <script type="text/javascript">
 
-
+    $("#login").on("blur",function () {
+        $.ajax({
+                url: "sprawdzlogin.php",
+                type: "GET",
+                data: {login:$('#login').val()},
+            success: function(data){
+                alert(data);
+            if(data=="true")
+                $("#error").html("podany login jest zajęty");
+            $("#error").css('display', 'block');
+        }
+    });
+    });
 
     function sprawdzDane()
     {
 
+
+    }
+
+    function tmp(){
         if(! sprawdz_login())
         {
             return false;
@@ -112,7 +128,6 @@ include_once "menu2.php";
             return false;
         }
     }
-
     function sprawdz_login()
 
     {

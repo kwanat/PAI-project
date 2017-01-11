@@ -1,4 +1,6 @@
 <?php
+//TODO
+
 if(isset($_COOKIE['id']))
     header('Location: start.php');
 ?>

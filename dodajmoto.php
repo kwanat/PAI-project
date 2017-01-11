@@ -2,16 +2,36 @@
 //TODO
 // Ogarnąć wyświetlanie bo się sypie strasznie
 // Dodać możliwość dodania innych atrybutów
-
+// Dodać zabezpieczenia przed XSS (htmlentities)
 
 if(!isset($_COOKIE['id']))
     header('Location: index.php');
+
+include "skrypty/pobierz_uprawnienia.php";
+$moderator=0;
+while($uprawnienie=mysqli_fetch_assoc($wynik))
+{
+    if($uprawnienie['ID_poziomu_uprawnien']==2)
+        $moderator=1;
+}
+if($moderator==0)
+{
+    header('Location: start.php');
+    exit();
+}
+
+include "skrypty/sprawdz_logowanie.php";
+?>
+<!DOCTYPE HTML>
+    <html lang="pl_PL">
+<?php
 
 include_once "header.php";
 ?>
 <body>
 <?php
 include_once "menu.php";
+
 ?>
 <div class="error" id="error" style="display: none">
     <?php
@@ -33,13 +53,15 @@ if(isset($_COOKIE['sukces'])) {
 </div>
 
 <?php
+
 include "polacz.php";
 $link = mysqli_connect($db_host,$db_uzytkownik,$db_haslo,$db_nazwa) or die("błąd połączenia z bazą danych");
 mysqli_query($link,"SET CHARSET utf8");
 mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 ?>
+
 <div class="container max-container">
-    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 max-div center">
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 max-div">
 
 
 
@@ -50,8 +72,9 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
         <select id="Marka" name="Marka" onchange="pokazdiva(id,'Markadiv','Markanowa')">
             <?php
             $wynik=mysqli_query($link,"Select * from MARKA");
-            while($wiersz=mysqli_fetch_assoc($wynik))
-                echo"<option value=\"{$wiersz['Id_marki']}\">{$wiersz['nazwa_marki']}</option>";
+            while($wiersz=mysqli_fetch_assoc($wynik)){
+                $wiersz['nazwa_marki']=htmlentities($wiersz['nazwa_marki']);
+                echo"<option value=\"{$wiersz['Id_marki']}\">{$wiersz['nazwa_marki']}</option>";}
             echo"<option value=\"marka\">Inna</option>";
             ?>
 
@@ -93,6 +116,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
             while($wiersz=mysqli_fetch_assoc($wynik))
                 echo"<option value=\"{$wiersz['Id_napedu']}\">{$wiersz['rodzaj_napedu']}</option>";
             echo"<option value=\"naped\">Inny</option>";
+            //KOMYNTORZ
             ?>
         </select>
     </div>
@@ -190,6 +214,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
     </div>
 
 </body>
+</html>
 
 
 <script type="text/javascript">

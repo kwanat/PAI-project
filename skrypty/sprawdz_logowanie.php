@@ -4,8 +4,8 @@
 if(isset($_COOKIE['id'])) {
 
 
-    include_once "./../funkcje.php";
-    include_once "./../polacz.php";
+    include_once "funkcje.php";
+    include_once "polacz.php";
 
     $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("brak połączenia z bazą");
 

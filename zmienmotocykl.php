@@ -13,14 +13,15 @@ include_once "header.php";
 <?php
 include_once "menu.php";
 ?>
-<div class="error" id="error" style="display: none">
+
     <?php
     if(isset($_COOKIE['error']))
+        echo "<div class=\"error\" id=\"error\">";
         echo $_COOKIE['error'];
     setcookie("error", 0, time()-60, '/');
     unset($_COOKIE['error']);
+    echo "</div>";
     ?>
-</div>
 <?php
 if(isset($_COOKIE['sukces'])) {
     echo "<div class=\"sukces\" id=\"sukces\" >";
@@ -30,11 +31,8 @@ if(isset($_COOKIE['sukces'])) {
     echo"</div>";
 }
 ?>
-</div>
 
 <?php
-
-
 
 include "polacz.php";
 $link = mysqli_connect($db_host,$db_uzytkownik,$db_haslo,$db_nazwa) or die("błąd połączenia z bazą danych");
@@ -53,156 +51,39 @@ if ($q->num_rows != 1) {
     exit();
 }
 $wynik=mysqli_fetch_assoc($q);
+$w=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from PARAMETR natural join WART_PARAMETRU where Id_motocykla={$wynik['Id_motocykla']}");
 
-$modyfikuj=mysqli_fetch_assoc($q);
+
 ?>
 <div class="container max-container">
-    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 max-div center">
+    <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12 col-lg-offset-2 col-md-offset-1 max-div center">
 
 
 
 
+        <ul class="list-group">
+            <?php
 
+            echo "<li class=\"list-group-item\">Marka: {$wynik['Marka']}<button>zmien</button></li>";
+            echo "<li class=\"list-group-item\">Model: {$wynik['Model']}</li>";
+            echo "<li class=\"list-group-item\">Rok produkcji: {$wynik['Rok_produkcji']}</li>";
+            echo "<li class=\"list-group-item\">Typ motocykla: {$wynik['Typ_motocykla']}</li>";
 
-        <form class="pagination"role="form"  style="background: rgba(177, 177, 177, 0.9)">
+            echo "<li class=\"list-group-item\">Pojemność silnika: {$wynik['Pojemność_silnika']}ccm</li>";
+            echo "<li class=\"list-group-item\">Rodzaj napędu: {$wynik['Rodzaj_napedu']}</li>";
+            echo "<li class=\"list-group-item\">Liczba suwów: {$wynik['Liczba_suwów']}</li>";
+            echo "<li class=\"list-group-item\">Liczba cylindrów: {$wynik['Liczba_cylindrow']}</li>";
 
-            <div class="form-group" >
-                <label for="x">Marka:</label><br>
-                <output name="x" value="1234"></output>
-            </div>
+            if($w->num_rows>0)
+                while($dana=mysqli_fetch_assoc($w))
+                {
+                    echo "<li class=\"list-group-item\">{$dana['nazwa_parametru']}: {$dana['wartosc_parametru']}</li>";
+                }
 
-            <div class="form-group" id="Markadiv" style="display: none">
-                <label for="Markanowa">Podaj nazwę marki:</label><br>
-                <input class="form-control" id="Markanowa" type="text" name="Markanowa" onblur="sprawdzdane()"/>
-            </div>
-
-            <div class="form-group" >
-                <label for="Model">Model:</label><br>
-                <input class="form-control" id="Model" type="text" name="Model" required/>
-            </div>
-
-            <div class="form-group" >
-                <label for="Rok">Rok produkcji:</label><br>
-                <select id="Rok" name="Rok" onchange="pokazdiva(id,'Rokdiv','Roknowy')">
-                    <?php
-                    $wynik=mysqli_query($link,"Select * from ROK_PROD");
-                    while($wiersz=mysqli_fetch_assoc($wynik))
-                        echo"<option value=\"{$wiersz['Id_roku']}\">{$wiersz['rok']}</option>";
-                    echo"<option value=\"rok\">Inny</option>";
-                    ?>
-                </select>
-            </div>
-
-            <div class="form-group" id="Rokdiv" style="display: none">
-                <label for="Roknowy">Podaj rok:</label><br>
-                <input class="form-control" id="Roknowy" type="text" name="Roknowy" onblur="sprawdzdane()"/>
-            </div>
-
-            <div class="form-group" >
-                <label for="Naped">Rodzaj napędu:</label><br>
-                <select id="Naped" name="Naped" onchange="pokazdiva(id,'Napeddiv','Napednowy')">
-                    <?php
-                    $wynik=mysqli_query($link,"Select * from NAPED");
-                    while($wiersz=mysqli_fetch_assoc($wynik))
-                        echo"<option value=\"{$wiersz['Id_napedu']}\">{$wiersz['rodzaj_napedu']}</option>";
-                    echo"<option value=\"naped\">Inny</option>";
-                    ?>
-                </select>
-            </div>
-
-            <div class="form-group" id="Napeddiv" style="display: none">
-                <label for="Napednowy">Podaj rodzaj napędu:</label><br>
-                <input class="form-control" id="Napednowy" type="text" name="Napednowy"onblur="sprawdzdane()"/>
-            </div>
-
-
-            <div class="form-group" >
-                <label for="Typ">Typ motocykla:</label><br>
-                <select id="Typ" name="Typ" onchange="pokazdiva(id,'Typdiv','Typnowy')">
-                    <?php
-                    $wynik=mysqli_query($link,"Select * from TYP_MOTOCYKLA");
-                    while($wiersz=mysqli_fetch_assoc($wynik))
-                        echo"<option value=\"{$wiersz['Id_typu']}\">{$wiersz['nazwa_typu']}</option>";
-                    echo"<option value=\"typ\">Inny</option>";
-                    ?>
-                </select>
-            </div>
-
-            <div class="form-group" id="Typdiv" style="display: none">
-                <label for="Typnowy">Podaj typ motocykla:</label><br>
-                <input class="form-control" id="Typnowy" type="text" name="Typnowy" onblur="sprawdzdane()"/>
-            </div>
-
-            <div class="form-group" >
-                <label for="Pojemnosc">Pojemność silnika:</label><br>
-                <select id="Pojemnosc" name="Pojemnosc" onchange="pokazdiva(id,'Pojemnoscdiv','Pojemnoscnowa')">
-                    <?php
-                    $wynik=mysqli_query($link,"Select * from POJ_SILNIKA");
-                    while($wiersz=mysqli_fetch_assoc($wynik))
-                        echo"<option value=\"{$wiersz['Id_pojemnosci']}\">{$wiersz['liczba_ccm']}</option>";
-                    echo"<option value=\"pojemnosc\">Inna</option>";
-                    ?>
-                </select>
-            </div>
-
-            <div class="form-group" id="Pojemnoscdiv" style="display: none">
-                <label for="Pojemnoscnowa">Podaj pojemność:</label><br>
-                <input class="form-control" id="Pojemnoscnowa" type="text" name="Pojemnoscnowa" onblur="sprawdzdane()"/>
-            </div>
-
-            <div class="form-group" >
-                <label for="Suw">Liczba suwów:</label><br>
-                <select id="Suw" name="Suw" onchange="pokazdiva(id,'Suwdiv','Suwnowy')">
-                    <?php
-                    $wynik=mysqli_query($link,"Select * from SUW");
-                    while($wiersz=mysqli_fetch_assoc($wynik))
-                        echo"<option value=\"{$wiersz['Id_suwu']}\">{$wiersz['liczba_suwów']}</option>";
-                    echo"<option value=\"suw\">Inna</option>";
-                    ?>
-                </select>
-            </div>
-
-            <div class="form-group" id="Suwdiv" style="display: none">
-                <label for="Suwnowy">Podaj ilość suwów:</label><br>
-                <input class="form-control" id="Suwnowy" type="text" name="Suwnowy" onblur="sprawdzdane()"/>
-            </div>
-
-            <div class="form-group" >
-                <label for="Cylinder">Liczba cylindrów:</label><br>
-                <select id="Cylinder" name="Cylinder" onchange="pokazdiva(id,'Cylinderdiv','Cylindernowy')">
-                    <?php
-                    $wynik=mysqli_query($link,"Select * from CYLINDER");
-                    while($wiersz=mysqli_fetch_assoc($wynik))
-                        echo"<option value=\"{$wiersz['Id_cylindra']}\">{$wiersz['liczba_cylindrow']}</option>";
-                    echo"<option value=\"cylinder\">Inna</option>";
-                    ?>
-                </select>
-            </div>
-
-            <div class="form-group" id="Cylinderdiv" style="display: none">
-                <label for="Cylindernowy">Podaj ilość cylindrówi:</label><br>
-                <input class="form-control" id="Cylindernowy" type="text" name="Cylindernowy" onblur="sprawdzdane()"/>
-            </div>
-
-            <div class="form-group" >
-                <label for="Zdjecie">Zdjęcie:</label><br>
-                <input class="form-control" id="Zdjecie" type="file" name="Zdjecie" required/>
-            </div>
-
-            <div class="form-group" >
-                <label for="Opis">Opis motocykla:</label><br>
-                <textarea id="Opis" name="Opis"></textarea>
-            </div>
-
-            <button type="submit" id="submitbutton" class="btn btn-default center-block" >Dodaj motocykl!</button><br>
-
-
-        </form>
-
-
-
-
-
+            echo "<li class=\"list-group-item text-center\" >OPIS</li>";
+            echo "<li class=\"list-group-item\">{$wynik['Opis']}</li>";
+            ?>
+        </ul>
 
 
 

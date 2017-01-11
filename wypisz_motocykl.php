@@ -7,6 +7,7 @@ header("Pragma: no-cache");
 include_once "funkcje.php";
 require_once "polacz.php";
 
+if(isset($_COOKIE['id']))
 include_once "skrypty/sprawdz_logowanie.php";
 
 ?>
@@ -21,7 +22,10 @@ include_once "header.php";
 ?>
 <body>
 <?php
-include_once "menu.php";
+if(isset($_COOKIE['id']))
+    include_once "menu.php";
+else
+    include_once "menu2.php";
 require_once "polacz.php";
 
 $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("brak połączenia z bazą");

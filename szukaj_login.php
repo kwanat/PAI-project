@@ -6,6 +6,7 @@ header("Pragma: no-cache");
 
 include_once "funkcje.php";
 require_once "polacz.php";
+
 include_once "skrypty/pobierz_uprawnienia.php";
 $admin=0;
 while($uprawnienie=mysqli_fetch_assoc($wynik))

@@ -13,7 +13,6 @@
     <!-- Grupowanie elementów menu w celu lepszego wyświetlania na urządzeniach moblinych -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li><a href="szukajmotocykla.php">Szukaj według kategorii</a></li>
         <li><a href="lista_motocykli.php">Lista motocykli</a></li>
       </ul>
       <form class="navbar-form navbar-left" method="get" role="search" action="wypisz_motocykl.php">

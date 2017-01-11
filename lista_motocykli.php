@@ -4,12 +4,11 @@ header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0, max-age=0", false);
 header("Pragma: no-cache");
 
-if(!isset($_COOKIE['id']))
-    header('Location: index.php');
+
 
 include_once "funkcje.php";
 require_once "polacz.php";
-
+if(isset($_COOKIE['id']))
 include_once "skrypty/sprawdz_logowanie.php";
 
 ?>
@@ -24,7 +23,10 @@ include_once "header.php";
 ?>
 <body>
 <?php
-include_once "menu.php";
+if(isset($_COOKIE['id']))
+    include_once "menu.php";
+else
+    include_once "menu2.php";
 require_once "polacz.php";
 
 if(isset($_COOKIE['error'])) {

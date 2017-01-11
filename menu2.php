@@ -12,6 +12,18 @@
         </div>
         <!-- Grupowanie elementów menu w celu lepszego wyświetlania na urządzeniach moblinych -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="lista_motocykli.php">Lista motocykli</a></li>
+            </ul>
+            <form class="navbar-form navbar-left" method="get" role="search" action="wypisz_motocykl.php">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="model" placeholder="Model">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="rok" placeholder="Rok produkcji">
+                </div>
+                <button type="submit" class="btn btn-default">Szukaj motocykla</button>
+            </form>
 
 
 

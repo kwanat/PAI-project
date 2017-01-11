@@ -1,4 +1,6 @@
 <?php
+//TODO
+
 
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0, max-age=0", false);
@@ -9,7 +11,6 @@ if(!isset($_COOKIE['id']))
 
 include_once "funkcje.php";
 require_once "polacz.php";
-
 include_once "skrypty/sprawdz_logowanie.php";
 
 ?>
@@ -19,7 +20,6 @@ include_once "skrypty/sprawdz_logowanie.php";
 
 <?php
 include_once "header.php";
-
 
 ?>
     <body>
@@ -55,8 +55,6 @@ include_once "header.php";
      $dana=mysqli_fetch_assoc($wynik);
     include "skrypty/wypiszrandommot.php";
     ?>
-
-
 
     </body>
 </html>

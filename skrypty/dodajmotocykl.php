@@ -9,6 +9,8 @@ $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("b
 mysqli_query($link,"SET CHARSET utf8");
 mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
+
+
 $allowedExts = array("gif", "jpeg", "jpg", "png");
 $temp = explode(".", $_FILES["Zdjecie"]["name"]);
 $extension = end($temp);
