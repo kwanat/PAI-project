@@ -1,7 +1,12 @@
 <?php
-
+//TODO
+// zabezpieczć COOKIE
 require_once "polacz.php";
 $link = mysqli_connect($db_host,$db_uzytkownik,$db_haslo,$db_nazwa);
+
+foreach ($_COOKIE as $k=>$v) {
+    $_COOKIE[$k] = mysqli_real_escape_string($link, $v);
+}
 
 if($link->connect_errno!=0)
 {

@@ -55,6 +55,7 @@
 
               <li><a href="zmiendane.php">Zmień dane</a></li>
               <li><a href="zmienhaslo.php">Zmień hasło</a></li>
+              <li><a href="usunkonto.php">Usuń konto</a></li>
               <li class="divider"></li>
               <li><a href="logout.php">Wyloguj</a></li>
             </ul>

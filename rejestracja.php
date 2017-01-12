@@ -61,7 +61,7 @@ include_once "menu2.php";
 </div>
 
 
-    <button type="submit" class="btn btn-default center-block" >Zarejestruj się!</button><br>
+    <button type="submit" id="submit" class="btn btn-default center-block" >Zarejestruj się!</button><br>
 
 
 </form>
@@ -83,10 +83,18 @@ include_once "menu2.php";
                 type: "GET",
                 data: {login:$('#login').val()},
             success: function(data){
-                alert(data);
-            if(data=="true")
+
+            if(data=="true") {
                 $("#error").html("podany login jest zajęty");
-            $("#error").css('display', 'block');
+                $("#error").css('display', 'block');
+                document.getElementById("submit").disabled = true;
+
+            }
+            else{
+                czysc()
+                $("#submit").disabled=false;
+                document.getElementById("submit").disabled = false;
+            }
         }
     });
     });
@@ -94,40 +102,35 @@ include_once "menu2.php";
     function sprawdzDane()
     {
 
+            if (!sprawdz_login()) {
+                return false;
+            }
+
+            if (!sprawdz_haslo()) {
+                return false;
+            }
+
+            if (!sprawdz_hasla()) {
+                return false;
+            }
+
+            if (!sprawdz_mail()) {
+                return false;
+            }
+
+            if (!sprawdz_imie()) {
+                return false;
+            }
+
+            if (!sprawdz_nazwisko()) {
+                return false;
+            }
 
     }
 
-    function tmp(){
-        if(! sprawdz_login())
-        {
-            return false;
-        }
 
-        if(! sprawdz_haslo())
-        {
-            return false;
-        }
 
-        if(! sprawdz_hasla())
-        {
-            return false;
-        }
 
-        if(! sprawdz_mail())
-        {
-            return false;
-        }
-
-        if(! sprawdz_imie())
-        {
-            return false;
-        }
-
-        if(! sprawdz_nazwisko())
-        {
-            return false;
-        }
-    }
     function sprawdz_login()
 
     {
@@ -137,9 +140,9 @@ include_once "menu2.php";
         if(login.length < 5 || login.length > 15)
         {
             document.getElementById("error").innerHTML = "Login powinien mieć od 5 do 15 znaków";
-            //document.getElementById("register_button").disabled = true;
+            document.getElementById("submit").disabled = true;
             document.getElementById("error").style.display="block";
-            setTimeout('login.focus()',0);
+            setTimeout('czysc()',3000);
             return false;
         }
         else if(document.getElementById("error").innerHTML == "Login powinien mieć od 5 do 15 znaków")
@@ -151,9 +154,9 @@ include_once "menu2.php";
         if (!regexp.test(login))
         {
             document.getElementById("error").innerHTML = "Login powinien zawierać tylko znaki alfanumeryczne";
-           // document.getElementById("register_button").disabled = true;
+           document.getElementById("submit").disabled = true;
             document.getElementById("error").style.display="block";
-            setTimeout('login.focus()',0);
+            setTimeout('czysc()',3000);
             return false;
         }
         else if(document.getElementById("error").innerHTML == "Login powinien zawierać tylko znaki alfanumeryczne")
@@ -161,21 +164,22 @@ include_once "menu2.php";
             document.getElementById("error").innerHTML = "";
             document.getElementById("error").style.display="none";
         }
-     //   document.getElementById("register_button").disabled = false;
+        document.getElementById("submit").disabled = false;
         return true;
     }
 
     function sprawdz_haslo()
     {
         var haslo= document.getElementById("haslo").value;
-        var regexp = /^([\w-!@#$%\^&*\-_])+$/;
 
         if(haslo.length < 8 || haslo.length > 20)
         {
+            if( document.getElementById("error").innerHTML!="")
+                setTimeout('czysc()',3000);
             document.getElementById("error").innerHTML = "Hasło powinno mieć od 8 do 20 znaków";
-            //document.getElementById("register_button").disabled = true;
+            document.getElementById("submit").disabled = true;
             document.getElementById("error").style.display="block";
-            setTimeout('haslo.focus()',0);
+            setTimeout('czysc()',3000);
             return false;
         }
         else if(document.getElementById("error").innerHTML == "Hasło powinno mieć od 8 do 20 znaków")
@@ -184,22 +188,7 @@ include_once "menu2.php";
             document.getElementById("error").style.display="none";
         }
 
-        if (!regexp.test(haslo))
-        {
-            document.getElementById("error").innerHTML = "Hasło może się składać ze znaków alfanumerycznych oraz !@#$%^&*-_";
-            //document.getElementById("register_button").disabled = true;
-            document.getElementById("error").style.display="block";
-            setTimeout('haslo.focus()',0);
-            return false;
-        }
-        else if(document.getElementById("error").innerHTML ==  "Hasło może się składać ze znaków alfanumerycznych oraz !@#$%^&*-_")
-        {
-            document.getElementById("error").innerHTML = "";
-            document.getElementById("error").style.display="none";
-
-        }
-
-        //document.getElementById("register_button").disabled = false;
+        document.getElementById("submit").disabled = false;
         return true;
     }
 
@@ -210,9 +199,9 @@ include_once "menu2.php";
         if(haslo != haslo2)
         {
             document.getElementById("error").innerHTML = "Hasła się różnią";
-           // document.getElementById("register_button").disabled = true;
+            document.getElementById("submit").disabled = true;
             document.getElementById("error").style.display="block";
-            setTimeout('haslo2.focus()',0);
+            setTimeout('czysc()',3000);
             return false;
         }
         else if(document.getElementById("error").innerHTML == "Hasła się różnią")
@@ -220,7 +209,7 @@ include_once "menu2.php";
             document.getElementById("error").innerHTML = "";
             document.getElementById("error").style.display="none";
         }
-        //document.getElementById("register_button").disabled = false;
+        document.getElementById("submit").disabled = false;
         return true;
 
     }
@@ -232,9 +221,9 @@ include_once "menu2.php";
         if(!regexp.test(mail))
         {
             document.getElementById("error").innerHTML = "Niepoprawny adres e-mail";
-            //document.getElementById("register_button").disabled = true;
+            document.getElementById("submit").disabled = true;
             document.getElementById("error").style.display="block";
-            setTimeout('email.focus()',0);
+            setTimeout('czysc()',3000);
             return false;
         }
         else if(document.getElementById("error").innerHTML == "Niepoprawny adres e-mail")
@@ -242,7 +231,7 @@ include_once "menu2.php";
             document.getElementById("error").innerHTML = "";
             document.getElementById("error").style.display="none";
         }
-        //document.getElementById("register_button").disabled = false;
+        document.getElementById("submit").disabled = false;
         return true;
     }
 
@@ -253,9 +242,9 @@ include_once "menu2.php";
         if(!regexp.test(imie))
         {
             document.getElementById("error").innerHTML = "Imię może się składać tylko z liter";
-            //document.getElementById("register_button").disabled = true;
+            document.getElementById("submit").disabled = true;
             document.getElementById("error").style.display="block";
-            setTimeout('imie.focus()',0);
+            setTimeout('czysc()',3000);
             return false;
         }
         else if(document.getElementById("error").innerHTML == "Imię może się składać tylko z liter")
@@ -263,7 +252,7 @@ include_once "menu2.php";
             document.getElementById("error").innerHTML = "";
             document.getElementById("error").style.display="none";
         }
-        //document.getElementById("register_button").disabled = false;
+        document.getElementById("submit").disabled = false;
         return true;
     }
 
@@ -274,9 +263,9 @@ include_once "menu2.php";
         if(!regexp.test(nazwisko))
         {
             document.getElementById("error").innerHTML = "Nazwisko może się składać tylko z liter";
-            //document.getElementById("register_button").disabled = true;
+            document.getElementById("submit").disabled = true;
             document.getElementById("error").style.display="block";
-            setTimeout('nazwisko.focus()',0);
+            setTimeout('czysc()',3000);
             return false;
         }
         else if(document.getElementById("error").innerHTML == "Nazwisko może się składać tylko z liter")
@@ -284,7 +273,14 @@ include_once "menu2.php";
             document.getElementById("error").innerHTML = "";
             document.getElementById("error").style.display="none";
         }
-        //document.getElementById("register_button").disabled = false;
+        document.getElementById("submit").disabled = false;
         return true;
+    }
+
+    function czysc(){
+        document.getElementById("error").innerHTML = "";
+        document.getElementById("error").style.display="none";
+
+
     }
 </script>
