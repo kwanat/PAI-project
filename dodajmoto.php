@@ -202,7 +202,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
     <div class="form-group" >
         <label for="Opis">Opis motocykla:</label><br>
-        <textarea id="Opis" name="Opis"></textarea>
+        <textarea class="form-control" id="Opis" name="Opis" style="resize: none"></textarea>
     </div>
 
     <button type="submit" id="submitbutton" class="btn btn-default center-block" >Dodaj motocykl!</button><br>
