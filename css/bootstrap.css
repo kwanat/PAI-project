@@ -6811,5 +6811,12 @@ text-align: center;
   background-color: transparent;
   text-decoration-color: black;
   text-decoration: underline;
+}
+
+.cookie {
+background: rgba(177, 177, 177, 0.9);
+  padding: 20px;
+text-align: center;
+  font-size: 15px;
 
 }

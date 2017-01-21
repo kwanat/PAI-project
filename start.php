@@ -27,6 +27,9 @@ include_once "header.php";
     include_once "menu.php";
     require_once "polacz.php";
 
+    include "skrypty/sprawdz_ciasteczka.php";
+
+
     if(isset($_COOKIE['error'])) {
         echo "<div class=\"error\" id=\"error\" >";
         echo $_COOKIE['error'];
@@ -56,5 +59,8 @@ include_once "header.php";
     include "skrypty/wypiszrandommot.php";
     ?>
 
+
+
     </body>
+
 </html>

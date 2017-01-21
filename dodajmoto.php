@@ -31,6 +31,7 @@ include_once "header.php";
 <body>
 <?php
 include_once "menu.php";
+include "skrypty/sprawdz_ciasteczka.php";
 
 ?>
 <div class="error" id="error" style="display: none">
@@ -214,6 +215,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
     </div>
 
 </body>
+
 </html>
 
 

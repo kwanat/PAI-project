@@ -27,6 +27,7 @@ if(isset($_COOKIE['id']))
 else
     include_once "menu2.php";
 require_once "polacz.php";
+include "skrypty/sprawdz_ciasteczka.php";
 
 $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("brak połączenia z bazą");
 mysqli_query($link,"SET CHARSET utf8");
@@ -47,6 +48,10 @@ $wynik=mysqli_fetch_assoc($q);
 
 
 $w=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from PARAMETR natural join WART_PARAMETRU where Id_motocykla={$wynik['Id_motocykla']}");
+
+foreach($wynik as $k=>$v){
+$wynik[$k]=htmlentities($v);
+}
 
 
 ?>
@@ -83,6 +88,8 @@ $w=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from PARAMETR n
                 echo "<li class=\"list-group-item text-center\" >DANE DODATKOWE</li>";
                 while($dana=mysqli_fetch_assoc($w))
                 {
+			$dana['nazwa_parametru']=htmlentities($dana['nazwa_parametru']);
+			$dana['wartosc_parametru']=htmlentities($dana['wartosc_parametru']);
                     echo "<li class=\"list-group-item\">{$dana['nazwa_parametru']}: {$dana['wartosc_parametru']}</li>";
                 }
             }
@@ -102,4 +109,5 @@ $w=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from PARAMETR n
 
 
 </body>
+
 </html>

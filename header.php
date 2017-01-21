@@ -11,4 +11,6 @@
     <link href="./css/bootstrap.css" rel="stylesheet">
     <script src="./js/bootstrap.min.js"></script>
 
+
   </head>
+  <noscript><meta http-equiv="refresh" content="0; url=skrypty/wylaczone_js.php" /></noscript>

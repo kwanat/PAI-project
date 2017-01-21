@@ -2,12 +2,16 @@
 
 if(isset($_COOKIE['id']))
     header('Location: start.php');
-
+?>
+<!DOCTYPE HTML>
+<html lang="pl">
+<?php
 include_once "header.php";
 ?>
 <body>
 <?php
 include_once "menu2.php";
+include "skrypty/sprawdz_ciasteczka.php";
 ?>
 <div class="error" id="error" style="display: none">
     <?php
@@ -73,6 +77,8 @@ include_once "menu2.php";
 
 
 </body>
+
+</html>
 
 
 <script type="text/javascript">

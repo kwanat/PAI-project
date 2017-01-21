@@ -35,6 +35,7 @@ include_once "header.php";
     <body>
 <?php
 include_once "menu.php";
+include "skrypty/sprawdz_ciasteczka.php";
 ?>
 <?php
 include_once "polacz.php";
@@ -123,5 +124,11 @@ else
 }
 
 ?>
+
     </body>
+<footer>
+    <?php
+    include "skrypty/sprawdz_ciasteczka.php";
+    ?>
+</footer>
 </html>

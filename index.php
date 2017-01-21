@@ -16,6 +16,8 @@ include_once "header.php";
 
 <?php
 include_once "menu2.php";
+include "skrypty/sprawdz_ciasteczka.php";
+
 ?>
 
 
@@ -61,6 +63,7 @@ if(isset($_COOKIE['sukces'])) {
 
 
 </body>
+
 </html>
 
 

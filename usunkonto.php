@@ -16,6 +16,7 @@ include_once "header.php";
 
 <?php
 include_once "menu.php";
+include "skrypty/sprawdz_ciasteczka.php";
 ?>
 
 
@@ -35,4 +36,5 @@ include_once "menu.php";
 
 
 </body>
+
 </html>

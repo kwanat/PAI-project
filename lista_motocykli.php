@@ -25,9 +25,11 @@ include_once "header.php";
 <?php
 if(isset($_COOKIE['id']))
     include_once "menu.php";
+
 else
     include_once "menu2.php";
 require_once "polacz.php";
+include "skrypty/sprawdz_ciasteczka.php";
 
 if(isset($_COOKIE['error'])) {
     echo "<div class=\"error\" id=\"error\" >";
@@ -73,4 +75,5 @@ $wynik=mysqli_query($link,"Select Zdjecie, Model, Rok_produkcji from dane_motocy
 
 
 </body>
+
 </html>

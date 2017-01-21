@@ -34,6 +34,7 @@ include_once "header.php";
     <body>
 <?php
 include_once "menu.php";
+include "skrypty/sprawdz_ciasteczka.php";
 
 if(isset($_COOKIE['error'])) {
     echo "<div class=\"error\" id=\"error\" >";
@@ -64,4 +65,5 @@ if(isset($_COOKIE['error'])) {
 
 
     </body>
+
 </html>
