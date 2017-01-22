@@ -6,6 +6,19 @@
 
 if(!isset($_COOKIE['id']))
     header('Location: index.php');
+include "skrypty/pobierz_uprawnienia.php";
+$moderator=0;
+while($uprawnienie=mysqli_fetch_assoc($wynik))
+{
+    if($uprawnienie['ID_poziomu_uprawnien']==2)
+        $moderator=1;
+}
+if($moderator==0)
+{
+    header('Location: start.php');
+    exit();
+}
+include "skrypty/sprawdz_logowanie.php";
 ?>
 <!DOCTYPE HTML>
 <html lang="pl">
@@ -64,6 +77,7 @@ $pojemnosc=$wynik['Pojemność_silnika'];
 $naped=$wynik['Rodzaj_napedu'];
 $suw=$wynik['Liczba_suwów'];
 $cylindry=$wynik['Liczba_cylindrow'];
+
 $opis=$wynik['Opis'];
 $id=$wynik['Id_motocykla'];
 setcookie('idmot',$id,time()+3600,"/");
@@ -251,7 +265,7 @@ setcookie('idmot',$id,time()+3600,"/");
             <div class="form-group" >
                 <label for="Opis">Opis motocykla:</label><br>
                 <?php
-                echo "<textarea class=\"form-control\" style=\"resize: none\" id=\"Opis\" name=\"Opis\">$opis</textarea>";
+                echo "<textarea class=\"form-control\" style=\"resize: none\" id=\"Opis\" name=\"Opis\"></textarea>";
                 ?>
 
             </div>
@@ -276,6 +290,10 @@ setcookie('idmot',$id,time()+3600,"/");
 
 
 <script type="text/javascript">
+
+
+
+    document.getElementById("Opis").value='<?php echo $opis;?>';
 
     function pokazdiva(wejscie,divzmiana,nowawartosc)
     {
@@ -314,7 +332,7 @@ setcookie('idmot',$id,time()+3600,"/");
 
     function sprawdzdanetekstowe(id,nazwapola,divpop)
     {
-        var regexp =/^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]{0,}$/;
+        var regexp =/^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]{0,}[\s-][a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]{0,}$/;
         if(!regexp.test(document.getElementById(id).value))
         {
             document.getElementById("error").innerHTML = "Pole "+nazwapola+" może składać się tylko z liter";

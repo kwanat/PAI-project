@@ -4,6 +4,22 @@
 
 if(!isset($_COOKIE['id']))
     header('Location: index.php');
+
+include "skrypty/pobierz_uprawnienia.php";
+$moderator=0;
+while($uprawnienie=mysqli_fetch_assoc($wynik))
+{
+    if($uprawnienie['ID_poziomu_uprawnien']==2)
+        $moderator=1;
+}
+if($moderator==0)
+{
+    header('Location: start.php');
+    exit();
+}
+
+include "skrypty/sprawdz_logowanie.php";
+?>
 ?>
 <!DOCTYPE HTML>
 <html lang="pl">

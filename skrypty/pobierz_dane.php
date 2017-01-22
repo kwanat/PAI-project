@@ -1,5 +1,7 @@
 <?php
 
+if(!isset($_COOKIE['id']))
+    header('Location: ./../index.php');
 require("polacz.php");
 
 $link = mysqli_connect($db_host,$db_uzytkownik,$db_haslo,$db_nazwa) or die("błąd połączenia z bazą danych");

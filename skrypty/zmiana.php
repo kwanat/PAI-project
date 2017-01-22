@@ -1,4 +1,19 @@
 <?php
+
+if(!isset($_COOKIE['id']))
+    header('Location: ./../index.php');
+include_once "pobierz_uprawnienia.php";
+$admin=0;
+while($uprawnienie=mysqli_fetch_assoc($wynik))
+{
+    if($uprawnienie['ID_poziomu_uprawnien']==1)
+        $admin=1;
+}
+if($admin==0)
+{
+    header('Location: ./../start.php');
+    exit();
+}
 $id=$_GET['id_uz'];
 $typ=$_GET['typ'];
 

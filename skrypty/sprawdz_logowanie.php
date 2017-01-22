@@ -48,7 +48,7 @@ id = '{$_COOKIE['id']}' and web = '{$_SERVER['HTTP_USER_AGENT']}' AND ip = '{$_S
     $link->close();
 }
 else
-    header('Location: index.php');
+    header('Location: ./../index.php');
 
 
 ?>

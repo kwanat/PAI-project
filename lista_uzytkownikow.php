@@ -67,6 +67,9 @@ if(isset($_COOKIE['error'])) {
             $wynik=mysqli_query($link,"Select * from UZYTKOWNIK");
             while($rekord=mysqli_fetch_assoc($wynik))
             {
+                foreach($rekord as $k=>$v){
+                    $rekord[$k]=htmlentities($v);
+                }
                 echo "<li class=\"list-group-item\"><a style=\"color: black\" class=\"link\" href=\"zmienuprawnienia.php?login={$rekord['login']}\">{$rekord['login']}</a></li>";
             }
 

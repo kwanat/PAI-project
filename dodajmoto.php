@@ -258,7 +258,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
     function sprawdzdanetekstowe(id,nazwapola,divpop)
     {
-        var regexp =/^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]{0,}$/;
+        var regexp =/^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]{0,}[\s-][a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]{0,}$/;
         if(!regexp.test(document.getElementById(id).value))
         {
             document.getElementById("error").innerHTML = "Pole "+nazwapola+" może składać się tylko z liter";

@@ -98,11 +98,67 @@ $wynik[$k]=htmlentities($v);
         <ul class="list-group">
 
             <?php
+            $wynik['Opis']=str_replace('\r\n','<br>',$wynik['Opis']);
             echo "<li class=\"list-group-item text-center\" >OPIS</li>";
             echo "<li class=\"list-group-item\">{$wynik['Opis']}</li>";
             ?>
         </ul>
 
+        <?php
+        $query="Select * from komentarze where Id_motocykla={$wynik['Id_motocykla']}  and Id_komentarza_fk IS NULL";
+        $komentarz=mysqli_query($link,$query);
+
+        ?>
+
+            <div class="row">
+                <!-- Contenedor Principal -->
+                <div class="comments-container">
+                    <ul id="comments-list" class="comments-list">
+                        <?php
+                        while($kom=mysqli_fetch_assoc($komentarz))
+                        {
+                            foreach($kom as $k=>$v){
+                                $kom[$k]=htmlentities($v);
+                            }
+                            echo "<li>";
+                            echo "<div class=\"comment-main-level\">";
+                            echo "<div class=\"comment-box\">";
+                            echo "<div class=\"comment-head\">";
+                            echo " <h6 class=\"comment-name\">{$kom['login']}</h6>";
+                            echo "<i>	<button  class=\"fa fa-reply\" onclick=\"pokazdiva('{$kom['Id_komentarza']}')\">Odpowiedz</button></i>";
+                            echo "</div>";
+                            echo "<div class=\"comment-content\">";
+                            echo "{$kom['tresc']}";
+                            echo "</div>";
+                            echo "<div class=\"comment-content\" style=\"display: none\" id=\"{$kom['Id_komentarza']}\">";
+                            echo "<textarea  class=\"form-control\" >Dodaj komentarz</textarea>";
+                            echo"<button style=\"text-align: center\">Dodaj</button>";
+                            echo "</div>";
+                                echo "</div></div>";
+                            $o=mysqli_query($link,"Select * from komentarze where Id_motocykla={$wynik['Id_motocykla']}  and Id_komentarza_fk={$kom['Id_komentarza']}");
+                            while($odpowiedz=mysqli_fetch_assoc($o)){
+                                foreach($odpowiedz as $k=>$v){
+                                    $odpowiedz[$k]=htmlentities($v);
+                                }
+                                echo "<ul class=\"comments-list reply-list\">";
+                                echo "<li><div class=\"comment-box\">";
+                                echo "<div class=\"comment-head\">";
+                                echo "<h6 class=\"comment-name\">{$odpowiedz['login']}</h6></div>";
+                                echo "<div class=\"comment-content\">";
+                                echo "{$odpowiedz['tresc']}";
+                                echo "</div></div></li></ul></li>";
+
+                            }
+
+                        }
+
+                        ?>
+
+                    </ul>
+                    <textarea id="nowykoment" class="form-control" style="resize: none">Dodaj komentarz</textarea>
+                    <button style="text-align: center">Dodaj</button>
+                </div>
+            </div>
      </div>
 </div>
 
@@ -111,3 +167,12 @@ $wynik[$k]=htmlentities($v);
 </body>
 
 </html>
+
+
+<script>
+
+    function pokazdiva(divid)
+    {
+        document.getElementById(divid).style.display= "block";
+    }
+</script>

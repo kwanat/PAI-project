@@ -1,5 +1,7 @@
 <?php
 
+if(!isset($_COOKIE['id']))
+    header('Location: ./../index.php');
 
 // pobranie podstawowych danych o motocyklu
 $q=mysqli_query($link,"Select * from dane_motocykl where Id_motocykla='{$dana['Id_motocykla']}';");
@@ -62,6 +64,7 @@ $w=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from PARAMETR n
         <ul class="list-group">
 
             <?php
+            $wynik['Opis']=str_replace('\r\n','<br>',$wynik['Opis']);
             echo "<li class=\"list-group-item text-center\" >OPIS</li>";
             echo "<li class=\"list-group-item\">{$wynik['Opis']}</li>";
             ?>

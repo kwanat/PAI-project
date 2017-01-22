@@ -1,5 +1,19 @@
 <?php
 
+if(!isset($_COOKIE['id']))
+    header('Location: ./../index.php');
+include "pobierz_uprawnienia.php";
+$moderator=0;
+while($uprawnienie=mysqli_fetch_assoc($wynik))
+{
+    if($uprawnienie['ID_poziomu_uprawnien']==2)
+        $moderator=1;
+}
+if($moderator==0)
+{
+    header('Location: ./../start.php');
+    exit();
+}
 
 require_once "polacz.php";
 include "pobierz_dane.php";
@@ -84,7 +98,7 @@ if($_POST['Cylinder']=='cylinder'){
 
 
 
-
+$_POST['Opis']=addslashes($_POST['Opis']);
 $zdjecie="zdjecia/".$_FILES['Zdjecie']['name'];
 if(!mysqli_query($link,"INSERT INTO MOTOCYKL(Id_marki, Model,Id_roku, Id_napedu,Id_typu,Id_pojemnosci,Id_suwu,Id_cylindra,opis,zdjecie,Id_uzytkownika)
 VALUES ({$_POST['Marka']},'{$_POST['Model']}',{$_POST['Rok']},{$_POST['Naped']},{$_POST['Typ']},{$_POST['Pojemnosc']},{$_POST['Suw']},{$_POST['Cylinder']},'{$_POST['Opis']}','{$zdjecie}',{$dane['Id_uzytkownika']});")) {

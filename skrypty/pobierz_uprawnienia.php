@@ -1,6 +1,10 @@
 <?php
-include_once "./../polacz.php";
-include_once "pobierz_dane.php";
+
+if(!isset($_COOKIE['id']))
+    header('Location: ./../index.php');
+
+include "polacz.php";
+include "pobierz_dane.php";
 
  $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("brak połączenia z bazą");
 

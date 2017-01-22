@@ -1,5 +1,7 @@
 <?php
 
+if(!isset($_COOKIE['id']))
+    header('Location: ./../index.php');
 require "./../polacz.php";
 include "pobierz_dane.php";
 

@@ -12,7 +12,7 @@ if(!isset($_COOKIE['cookie_info']))
 <script>
     function ustawcookie() {
         var d = new Date();
-        d.setTime(d.getTime() + (24*60*60*365));
+        d.setTime(d.getTime() + (24*60*60*1000*365));
         var expires = "expires="+ d.toUTCString();
         document.cookie = "cookie_info=akceptacja;" + expires + ";path=/";
         location.reload();

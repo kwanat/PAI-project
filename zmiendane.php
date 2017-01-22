@@ -2,6 +2,7 @@
 
 if(!isset($_COOKIE['id']))
     header('Location: index.php');
+include "skrypty/sprawdz_logowanie.php";
 ?>
 <!DOCTYPE HTML>
 <html lang="pl">

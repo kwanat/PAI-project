@@ -6,9 +6,23 @@
 <?php
 
 
-require_once "polacz.php";
-include "pobierz_dane.php";
+if(!isset($_COOKIE['id']))
+    header('Location: ./../index.php');
+include "pobierz_uprawnienia.php";
+$moderator=0;
+while($uprawnienie=mysqli_fetch_assoc($wynik))
+{
+    if($uprawnienie['ID_poziomu_uprawnien']==2)
+        $moderator=1;
+}
+if($moderator==0)
+{
+    header('Location: ./../start.php');
+    exit();
+}
 
+include "pobierz_dane.php";
+require "polacz.php";
 $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("brak połączenia z bazą");
 
 mysqli_query($link,"SET CHARSET utf8");
@@ -53,7 +67,7 @@ if(isset($_COOKIE['idmot'])) {
         $_POST['Cylinder'] = $link->insert_id;
     }
 
-
+    $_POST['Opis']=addslashes($_POST['Opis']);
     if (!mysqli_query($link, "UPDATE MOTOCYKL set Id_marki={$_POST['Marka']}, Model='{$_POST['Model']}',Id_roku={$_POST['Rok']}, Id_napedu={$_POST['Naped']},Id_typu={$_POST['Typ']},
 Id_pojemnosci={$_POST['Pojemnosc']},Id_suwu={$_POST['Suw']},Id_cylindra={$_POST['Cylinder']},opis='{$_POST['Opis']}',Id_uzytkownika={$dane['Id_uzytkownika']} where Id_motocykla=$id;")
     ) {
