@@ -34,12 +34,12 @@ include_once "menu.php";
 include "skrypty/sprawdz_ciasteczka.php";
 
 ?>
-<div class="error" id="blad" style="display: none">
+<div class="error" id="error" style="display: none">
 </div>
 
 <?php
 if(isset($_COOKIE['error'])) {
-echo "<div class=\"error\" id=\"error\" >";
+echo "<div class=\"error\" id=\"blad\" >";
     echo $_COOKIE['error'];
     setcookie("error", 0, time() - 60, '/');
     unset($_COOKIE['error']);
@@ -112,7 +112,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
     <div class="form-group" id="Rokdiv" style="display: none">
         <label for="Roknowy">Podaj rok:</label><br>
-        <input class="form-control" id="Roknowy" type="text" name="Roknowy" />
+        <input class="form-control" id="Roknowy" type="text" name="Roknowy" onblur="sprawdzdane()"/>
     </div>
 
     <div class="form-group" >
@@ -222,6 +222,16 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
         <textarea class="form-control" id="Opis" name="Opis" style="resize: none"></textarea>
     </div>
 
+
+    <button type="button" class="btn btn-default center-block" onclick="dodajparametr()">Dodaj parametr</button>
+    <br>
+
+    <div class="form_group" id="parametry">
+
+    </div>
+
+
+    <br><br>
     <button type="submit" id="submitbutton" class="btn btn-default center-block" >Dodaj motocykl!</button><br>
 
 
@@ -236,6 +246,26 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
 
 <script type="text/javascript">
+
+
+
+    function dodajparametr(){
+        <?php
+        if($parametr=mysqli_query($link,"Select * from PARAMETR"))
+
+
+        ?>
+        var div = $('#parametry');
+        div.append('<label for=\"param\">Nazwa parametru:</label><br><input list=\"params\" name=\"param[]\" id=\"param\"><datalist id=\"params\"><?php
+        while($par=mysqli_fetch_assoc($parametr)) {
+                    $par['nazwa_parametru']=htmlentities($par['nazwa_parametru']);
+                    echo "<option value=\"{$par['nazwa_parametru']}\">";
+                }?></datalist><label for=\"wart\">Wartość parametru:</label><br><input class=\"form-control\" id=\"wart\" type=\"text\" name=\"wartosc[]\" /><br>');
+
+    }
+
+
+
 
     function pokazdiva(wejscie,divzmiana,nowawartosc)
     {
@@ -257,18 +287,29 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
         //if(!sprawdzdanetekstowe('Markanowa','marka','Markadiv'))
           //  return false;
-        if(!sprawdzdaneliczbowe('Roknowy','rok','Rokdiv'))
-            return false;
-        //if(!sprawdzdanetekstowe('Napednowy','naped','Napeddiv'))
-         //   return false;
-        //if(!sprawdzdanetekstowe('Typnowy','typmotocykla','Typdiv'))
-          //  return false;
-        if(!sprawdzdaneliczbowe('Pojemnoscnowa','pojemność','Pojemnoscdiv'))
-            return false;
-        if(!sprawdzdaneliczbowe('Suwnowy','liczba suwów','Suwdiv'))
-            return false;
-        if(!sprawdzdaneliczbowe('Cylindernowy','liczba cylindrów','Cylinderdiv'))
-            return false;
+        try {
+            sprawdzdaneliczbowe('Roknowy', 'rok', 'Rokdiv');
+
+            //if(!sprawdzdanetekstowe('Napednowy','naped','Napeddiv'))
+            //   return false;
+            //if(!sprawdzdanetekstowe('Typnowy','typmotocykla','Typdiv'))
+            //  return false;
+            sprawdzdaneliczbowe('Pojemnoscnowa', 'pojemność', 'Pojemnoscdiv');
+
+            sprawdzdaneliczbowe('Suwnowy', 'liczba suwów', 'Suwdiv');
+
+            sprawdzdaneliczbowe('Cylindernowy', 'liczba cylindrów', 'Cylinderdiv');
+
+            document.getElementById("submitbutton").disabled = false;
+            document.getElementById("error").style.display="none";
+        }
+        catch(e)
+        {
+            document.getElementById("error").innerHTML =e.message;
+            document.getElementById("submitbutton").disabled = true;
+            document.getElementById("error").style.display="block";
+
+        }
 
     }
 
@@ -299,29 +340,20 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
     function sprawdzdaneliczbowe(id,nazwapola,divpop)
     {
         var regexp=/^[0-9]{0,}$/;
-        if(!regexp.test(document.getElementById(id).value))
-        {
-            document.getElementById("error").innerHTML = "Pole "+nazwapola+" może składać się tylko z cyfr";
-            document.getElementById("submitbutton").disabled = true;
-            document.getElementById("error").style.display="block";
-            if(document.getElementById(divpop).style.display=="none"){
+        if(!regexp.test(document.getElementById(id).value)) {
+
+
+            if (document.getElementById(divpop).style.display == "none") {
                 document.getElementById("submitbutton").disabled = false;
-                setTimeout('czysc()',0);
+                setTimeout('czysc()', 0);
                 return true;
             }
-            setTimeout('czysc()',5000);
-            return false
+            throw new Error("Pole " + nazwapola + " może składać się tylko z cyfr");
         }
-        else
-        {
-
-            document.getElementById("submitbutton").disabled = false;
-            document.getElementById("error").style.display="none";
-            return true;
+           return true;
         }
 
 
-    }
 
     function czysc(){
         document.getElementById("error").innerHTML = "";

@@ -36,11 +36,52 @@ if(isset($_COOKIE['idmot'])) {
     $id = $_COOKIE['idmot'];
     setcookie('idmot', "", time() - 100, "/");
     unset($_COOKIE['idmot']);
-    echo $id;
 
 
 
+if($_FILES['Zdjecie']['name']!='') {
 
+    $allowedExts = array("gif", "jpeg", "jpg", "png");
+    $temp = explode(".", $_FILES["Zdjecie"]["name"]);
+    $extension = end($temp);
+
+    if ((($_FILES["Zdjecie"]["type"] == "image/gif")
+            || ($_FILES["Zdjecie"]["type"] == "image/jpeg")
+            || ($_FILES["Zdjecie"]["type"] == "image/jpg")
+            || ($_FILES["Zdjecie"]["type"] == "image/pjpeg")
+            || ($_FILES["Zdjecie"]["type"] == "image/x-png")
+            || ($_FILES["Zdjecie"]["type"] == "image/png"))
+        && in_array($extension, $allowedExts)
+    ) {
+
+        if ($_FILES["Zdjecie"]["error"] > 0) {
+            setcookie("error", "błąd pobierania pliku", time() + 3600 * 24, "/");
+            header("location: ./../modyfikujmoto.php");
+            exit();
+        }
+        else
+        {
+            $zdjecie="zdjecia/".$id.".".$extension;
+
+            if(!move_uploaded_file($_FILES["Zdjecie"]["tmp_name"],
+                "./../".$zdjecie)) {
+                setcookie("error","błąd przenoszenia pliku",time()+3600*24,"/");
+                header("location: ./../dodajmoto.php"); exit();
+            }
+            chmod("./../".$zdjecie,777);
+        }
+
+
+    } else {
+        setcookie("error", "niepoprawny plik", time() + 3600 * 24, "/");
+        header("location: ./../modyfikujmoto.php");
+        exit();
+    }
+}
+else{
+    setcookie("error","brak pliku",time()+3600*24,"/");
+    header("location: ./../modyfikujmoto.php");
+}
     if($_POST['Marka']=='marka'){
         $_POST['Markanowa']=mysqli_real_escape_string($link,$_POST['Markanowa']);
         if( $_POST['Markanowa']=="") {
@@ -154,10 +195,8 @@ if(isset($_COOKIE['idmot'])) {
 
     $_POST['Opis']=addslashes($_POST['Opis']);
 
-
-
     if (!mysqli_query($link, "UPDATE MOTOCYKL set Id_marki={$_POST['Marka']}, Model='{$_POST['Model']}',Id_roku={$_POST['Rok']}, Id_napedu={$_POST['Naped']},Id_typu={$_POST['Typ']},
-Id_pojemnosci={$_POST['Pojemnosc']},Id_suwu={$_POST['Suw']},Id_cylindra={$_POST['Cylinder']},opis='{$_POST['Opis']}',Id_uzytkownika={$dane['Id_uzytkownika']} where Id_motocykla=$id;")
+Id_pojemnosci={$_POST['Pojemnosc']},Id_suwu={$_POST['Suw']},Id_cylindra={$_POST['Cylinder']},opis='{$_POST['Opis']}',Id_uzytkownika={$dane['Id_uzytkownika']}, zdjecie='{$zdjecie}'where Id_motocykla=$id;")
     )
 
 
@@ -176,7 +215,5 @@ Id_pojemnosci={$_POST['Pojemnosc']},Id_suwu={$_POST['Suw']},Id_cylindra={$_POST[
     }
 }
 else
-    echo "cos nie dziala";
-
 
 ?>

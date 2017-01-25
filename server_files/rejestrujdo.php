@@ -2,6 +2,21 @@
 include_once "funkcje.php";
 require_once "polacz.php";
 
+function sprawdzdane($link){
+
+
+        if (($_POST['login'] == '') || ($_POST['haslo'] == '') || ($_POST['haslo2'] == '') || ($_POST['imie'] == '') || ($_POST['nazwisko'] == '') || ($_POST['email'] == '')) {
+            throw new Exception("pola: login, hasło, imie, nazwisko, e-mail muszą być wypełnione!");
+        }
+        if ($_POST['haslo'] != $_POST['haslo2']) {
+            throw new Exception("podane hasła się różnią");
+        }
+
+        $q = mysqli_query($link, "Select * from UZYTKOWNIK where login='{$_POST['login']}'");
+        if ($q->num_rows != 0) {
+            throw new Exception("podany login jest już zajęty");
+        }
+    }
 
 $link = @new mysqli($db_host,$db_uzytkownik,$db_haslo,$db_nazwa)or die("błąd połączenia z bazą");
 
@@ -14,6 +29,21 @@ if(!$link->set_charset("utf8"))
 
 else {
 
+    foreach ($_POST as $k => $v) {
+        $_POST[$k] = mysqli_real_escape_string($link, $v);
+
+        try{
+        sprawdzdane($link);
+        }
+        catch(Exception $e){
+            setcookie("error", $e->getMessage(), time()+3600, "/");
+            header('Location: rejestracja.php');
+            exit;
+        }
+}
+
+
+
     $login = $_POST['login'];
     $haslo = $_POST['haslo'];
     $haslo2 = $_POST['haslo2'];
@@ -22,8 +52,8 @@ else {
     $nazwisko = $_POST['nazwisko'];
     $motocykl = $_POST['motocykl'];
 
-    echo "test2";
-    //hasła się zgadzają
+
+
 
 
     $haslo = sha1($haslo);

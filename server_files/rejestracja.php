@@ -13,14 +13,19 @@ include_once "header.php";
 include_once "menu2.php";
 include "skrypty/sprawdz_ciasteczka.php";
 ?>
+
+<?php
+if(isset($_COOKIE['error']))
+    echo "<div class=\"error\" id=\"blad\">";
+echo $_COOKIE['error'];
+setcookie("error", 0, time()-60, '/');
+unset($_COOKIE['error']);
+echo "</div>";
+?>
+
 <div class="error" id="error" style="display: none">
-    <?php
-    if(isset($_COOKIE['error']))
-        echo $_COOKIE['error'];
-    setcookie("error", 0, time()-60, '/');
-    unset($_COOKIE['error']);
-    ?>
 </div>
+
 
 <div class="container max-container">
     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 max-div center">
@@ -85,52 +90,52 @@ include "skrypty/sprawdz_ciasteczka.php";
 
     $("#login").on("blur",function () {
         $.ajax({
-                url: "sprawdzlogin.php",
-                type: "GET",
-                data: {login:$('#login').val()},
+            url: "sprawdzlogin.php",
+            type: "GET",
+            data: {login:$('#login').val()},
             success: function(data){
 
-            if(data=="true") {
-                $("#error").html("podany login jest zajęty");
-                $("#error").css('display', 'block');
-                document.getElementById("submit").disabled = true;
+                if(data=="true") {
+                    $("#error").html("podany login jest zajęty");
+                    $("#error").css('display', 'block');
+                    document.getElementById("submit").disabled = true;
 
+                }
+                else{
+                   // setTimeout(czysc(),5000);
+                    $("#submit").disabled=false;
+                    document.getElementById("submit").disabled = false;
+                }
             }
-            else{
-                czysc()
-                $("#submit").disabled=false;
-                document.getElementById("submit").disabled = false;
-            }
-        }
-    });
+        });
     });
 
     function sprawdzDane()
     {
 
-            if (!sprawdz_login()) {
-                return false;
-            }
+        if (!sprawdz_login()) {
+            return false;
+        }
 
-            if (!sprawdz_haslo()) {
-                return false;
-            }
+        if (!sprawdz_haslo()) {
+            return false;
+        }
 
-            if (!sprawdz_hasla()) {
-                return false;
-            }
+        if (!sprawdz_hasla()) {
+            return false;
+        }
 
-            if (!sprawdz_mail()) {
-                return false;
-            }
+        if (!sprawdz_mail()) {
+            return false;
+        }
 
-            if (!sprawdz_imie()) {
-                return false;
-            }
+        if (!sprawdz_imie()) {
+            return false;
+        }
 
-            if (!sprawdz_nazwisko()) {
-                return false;
-            }
+        if (!sprawdz_nazwisko()) {
+            return false;
+        }
 
     }
 
@@ -160,7 +165,7 @@ include "skrypty/sprawdz_ciasteczka.php";
         if (!regexp.test(login))
         {
             document.getElementById("error").innerHTML = "Login powinien zawierać tylko znaki alfanumeryczne";
-           document.getElementById("submit").disabled = true;
+            document.getElementById("submit").disabled = true;
             document.getElementById("error").style.display="block";
             setTimeout('czysc()',5000);
             return false;

@@ -128,7 +128,7 @@ $wynik[$k]=htmlentities($v);
                 echo "{$kom['tresc']}";
                 echo "</div>";
                 echo "<div class=\"comment-content\" id=\"{$kom['Id_komentarza']}\" style=\"display: none\" >";
-                echo "<textarea  class=\"form-control\"  >Dodaj komentarz</textarea>";
+                echo "<textarea  class=\"form-control\" placeholder='Dodaj odpowiedź' ></textarea>";
                 echo "<button style=\"text-align: center\" onclick=\"dodajodpowiedz('{$kom['Id_komentarza']}')\">Dodaj</button>";
                 echo "</div>";
                 echo "</div></div>";
@@ -150,7 +150,7 @@ $wynik[$k]=htmlentities($v);
             }
 
             echo " </ul>";
-            echo "<textarea id=\"nowykomentarz\" class=\"form-control\" style=\"resize: none\">Dodaj komentarz</textarea>";
+            echo "<textarea id=\"nowykomentarz\" class=\"form-control\" placeholder='Dodaj komentarz' style=\"resize: none\"></textarea>";
             echo "<button style=\"text-align: center\" id='nowykoment' onclick='dodajkom()'>Dodaj</button>";
             echo "</div></div>";
         }

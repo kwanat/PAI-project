@@ -233,7 +233,7 @@ setcookie('idmot',$id,time()+3600,"/");
                     $wynik2['liczba_suwów']=htmlentities($wynik2['liczba_suwów']);
                     echo"<option value=\"{$wynik2['Id_suwu']}\">{$wynik2['liczba_suwów']}</option>";
                     while($wiersz=mysqli_fetch_assoc($wynik)) {
-                        $wiersz['liczba_suwów'] = htmlentities($wiersz['licza_suwów']);
+                        $wiersz['liczba_suwów'] = htmlentities($wiersz['liczba_suwów']);
                         if ($wiersz['liczba_suwów'] != htmlentities($suw))
                             echo "<option value=\"{$wiersz['Id_suwu']}\">{$wiersz['liczba_suwów']}</option>";
                     }
@@ -278,6 +278,13 @@ setcookie('idmot',$id,time()+3600,"/");
 
             </div>
 
+            <button type="button" onclick="zmienfoto()">Zmień zdjęcie</button>
+
+            <div class="form-group" id="zdjeciediv" style="display: none;">
+                <label for="Zdjecie">Zdjęcie:</label><br>
+                <input class="form-control" id="Zdjecie" type="file" name="Zdjecie"/>
+            </div>
+
             <button type="submit" id="submitbutton" class="btn btn-default center-block" >Modyfikuj!</button><br>
 
 
@@ -302,6 +309,19 @@ setcookie('idmot',$id,time()+3600,"/");
 
 
     document.getElementById("Opis").value='<?php echo $opis;?>';
+
+    function zmienfoto() {
+        if(document.getElementById("zdjeciediv").style.display=="none") {
+            document.getElementById("zdjeciediv").style.display = "block";
+            document.getElementById("Zdjecie").required=true;
+        }
+        else
+        {
+            document.getElementById("zdjeciediv").style.display = "none";
+            document.getElementById("Zdjecie").required=false;
+        }
+
+    }
 
     function pokazdiva(wejscie,divzmiana,nowawartosc)
     {

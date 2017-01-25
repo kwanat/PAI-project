@@ -24,7 +24,6 @@ mysqli_query($link,"SET CHARSET utf8");
 mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
 
-
 $allowedExts = array("gif", "jpeg", "jpg", "png");
 $temp = explode(".", $_FILES["Zdjecie"]["name"]);
 $extension = end($temp);
@@ -40,18 +39,10 @@ if ((($_FILES["Zdjecie"]["type"] == "image/gif")
     if ($_FILES["Zdjecie"]["error"] > 0) {
         setcookie("error","błąd pobierania pliku",time()+3600*24,"/");
         header("location: ./../dodajmoto.php");exit();
-    } else {
-        if (file_exists("./../zdjecia/" . $_FILES["Zdjecie"]["name"])) {
-            setcookie("error","takie zdjęcie już istnieje",time()+3600*24,"/");
-            header("location: ./../dodajmoto.php");exit();
-        } else {
-            if(!move_uploaded_file($_FILES["Zdjecie"]["tmp_name"],
-                "./../zdjecia/".$_FILES['Zdjecie']['name'])) {
-                setcookie("error","błąd pobierania pliku",time()+3600*24,"/");
-                header("location: ./../dodajmoto.php"); exit();
-            }
-            }
     }
+
+
+
 } else {
     setcookie("error","niepoprawny plik",time()+3600*24,"/");
     header("location: ./../dodajmoto.php");exit();
@@ -60,6 +51,17 @@ if ((($_FILES["Zdjecie"]["type"] == "image/gif")
 foreach ($_POST as $k=>$v) {
     $_POST[$k] = mysqli_real_escape_string($link, $v);
 }
+foreach ($_POST['param'] as $value)
+{
+   $value=mysqli_real_escape_string($link,$value);
+}
+foreach ($_POST['wartosc'] as $value)
+{
+    $value=mysqli_real_escape_string($link,$value);
+}
+
+
+
 
 //TODO
 //Sprawdzic czy nie ustawiono inne i odczytać je z inputa
@@ -177,13 +179,39 @@ if($_POST['Cylinder']=='cylinder'){
 
 
 $_POST['Opis']=addslashes($_POST['Opis']);
-$zdjecie="zdjecia/".$_FILES['Zdjecie']['name'];
+
+
+
+// DOBRE MIEJSCE NA TRANSAKCJE
+
+
+if(mysqli_query($link,"Select * from MOTOCYKL where Model='{$_POST['Model']}' and Id_roku={$_POST['Rok']}")->num_rows>0)
+{
+    setcookie("error", "taki motocykl już istnieje",time()+3600*24,"/");
+    header("location: ./../start.php");
+    exit;
+}
+
+
 if(!mysqli_query($link,"INSERT INTO MOTOCYKL(Id_marki, Model,Id_roku, Id_napedu,Id_typu,Id_pojemnosci,Id_suwu,Id_cylindra,opis,zdjecie,Id_uzytkownika)
-VALUES ({$_POST['Marka']},'{$_POST['Model']}',{$_POST['Rok']},{$_POST['Naped']},{$_POST['Typ']},{$_POST['Pojemnosc']},{$_POST['Suw']},{$_POST['Cylinder']},'{$_POST['Opis']}','{$zdjecie}',{$dane['Id_uzytkownika']});")) {
+VALUES ({$_POST['Marka']},'{$_POST['Model']}',{$_POST['Rok']},{$_POST['Naped']},{$_POST['Typ']},{$_POST['Pojemnosc']},{$_POST['Suw']},{$_POST['Cylinder']},'{$_POST['Opis']}','zdjecie',{$dane['Id_uzytkownika']});")) {
     setcookie("error", "błąd dodawania motocykla do bazy", time() + 3600 * 24, "/");
     header("location: ./../dodajmoto.php");exit();
 }
 else{
+    $idmot=$link->insert_id;
+    $zdjecie="zdjecia/".$idmot.".".$extension;
+
+    mysqli_query($link,"UPDATE MOTOCYKL set zdjecie = '{$zdjecie}' where Id_motocykla={$idmot}");
+
+    if(!move_uploaded_file($_FILES["Zdjecie"]["tmp_name"],
+        "./../".$zdjecie)) {
+        setcookie("error","błąd pobierania pliku",time()+3600*24,"/");
+        header("location: ./../dodajmoto.php"); exit();
+    }
+    chmod("./../".$zdjecie,777);
+
+
     setcookie("sukces","dodano motocykl",time()+3600*24,"/");
     header("location: ./../dodajmoto.php");exit();
 }
