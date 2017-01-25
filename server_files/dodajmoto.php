@@ -256,14 +256,19 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
         ?>
         var div = $('#parametry');
-        div.append('<label for=\"param\">Nazwa parametru:</label><br><input list=\"params\" name=\"param[]\" id=\"param\"><datalist id=\"params\"><?php
+        div.append('<div><label for=\"param\">Nazwa parametru:</label><br><input list=\"params\" name=\"param[]\" id=\"param\"><datalist id=\"params\"><?php
         while($par=mysqli_fetch_assoc($parametr)) {
                     $par['nazwa_parametru']=htmlentities($par['nazwa_parametru']);
                     echo "<option value=\"{$par['nazwa_parametru']}\">";
-                }?></datalist><label for=\"wart\">Wartość parametru:</label><br><input class=\"form-control\" id=\"wart\" type=\"text\" name=\"wartosc[]\" /><br>');
+                }?></datalist><button type="button" id="remScnt">Usun</button><label for=\"wart\">Wartość parametru:</label><br><input class=\"form-control\" id=\"wart\" type=\"text\" name=\"wartosc[]\" /><br></div>');
 
     }
 
+
+    $(document).on('click', '#remScnt', function() {
+        $(this).closest('div').remove();
+        return false;
+    });
 
 
 

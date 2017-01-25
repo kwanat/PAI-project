@@ -285,6 +285,29 @@ setcookie('idmot',$id,time()+3600,"/");
                 <input class="form-control" id="Zdjecie" type="file" name="Zdjecie"/>
             </div>
 
+
+            <button type="button" class="btn btn-default center-block" onclick="dodajparametr()">Dodaj parametr</button>
+            <br>
+
+            <div class="form_group" id="parametry">
+                <?php
+                $param=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from WART_PARAMETRU NATURAL JOIN PARAMETR where Id_motocykla={$id} ");
+                $parametr=mysqli_query($link,"Select * from PARAMETR");
+                while($wynik=mysqli_fetch_assoc($param)) {
+                    $wynik['nazwa_parametru']=htmlentities($wynik['nazwa_parametru']);
+                    $wynik['wartosc_parametru']=htmlentities($wynik['wartosc_parametru']);
+                    echo "<div><label for=\"param\">Nazwa parametru:</label><br><input list=\"params\" name=\"param[]\" id=\"param\" value='{$wynik['nazwa_parametru']}'><datalist id=\"params\">";
+                while($par=mysqli_fetch_assoc($parametr)) {
+                    $par['nazwa_parametru'] = htmlentities($par['nazwa_parametru']);
+                    echo "<option value=\"{$par['nazwa_parametru']}\">";
+                }
+                echo"</datalist><button type=\"button\" id=\"remScnt\">Usun</button><label for=\"wart\">Wartość parametru:</label><br><input class=\"form - control\" id=\"wart\" type=\"text\" name=\"wartosc[]\" value='{$wynik['wartosc_parametru']}'/><br></div><br>";
+                }
+
+                ?>
+
+            </div>
+
             <button type="submit" id="submitbutton" class="btn btn-default center-block" >Modyfikuj!</button><br>
 
 
@@ -308,7 +331,32 @@ setcookie('idmot',$id,time()+3600,"/");
 
 
 
-    document.getElementById("Opis").value='<?php echo $opis;?>';
+     document.getElementById("Opis").innerHTML="<?php echo $opis;?>";
+
+    function dodajparametr(){
+        <?php
+        if($parametr=mysqli_query($link,"Select * from PARAMETR"))
+
+
+        ?>
+        var div = $('#parametry');
+        div.append('<div><label for=\"param\">Nazwa parametru:</label><br><input list=\"params\" name=\"param[]\" id=\"param\"><datalist id=\"params\"><?php
+            while($par=mysqli_fetch_assoc($parametr)) {
+                $par['nazwa_parametru']=htmlentities($par['nazwa_parametru']);
+                echo "<option value=\"{$par['nazwa_parametru']}\">";
+            }?></datalist><button type="button" id="remScnt">Usun</button><label for=\"wart\">Wartość parametru:</label><br><input class=\"form-control\" id=\"wart\" type=\"text\" name=\"wartosc[]\" /><br></div>');
+
+    }
+
+
+    $(document).on('click', '#remScnt', function() {
+        $(this).closest('div').remove();
+        return false;
+    });
+
+
+
+
 
     function zmienfoto() {
         if(document.getElementById("zdjeciediv").style.display=="none") {

@@ -24,6 +24,7 @@ mysqli_query($link,"SET CHARSET utf8");
 mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
 
+
 $allowedExts = array("gif", "jpeg", "jpg", "png");
 $temp = explode(".", $_FILES["Zdjecie"]["name"]);
 $extension = end($temp);
@@ -48,16 +49,29 @@ if ((($_FILES["Zdjecie"]["type"] == "image/gif")
     header("location: ./../dodajmoto.php");exit();
 }
 
-foreach ($_POST as $k=>$v) {
-    $_POST[$k] = mysqli_real_escape_string($link, $v);
-}
-foreach ($_POST['param'] as $value)
+
+
+$ilosc=0;
+
+    foreach ($_POST['param'] as $value)
 {
    $value=mysqli_real_escape_string($link,$value);
+    $ilosc++;
+    if($value=="")
+    {
+        setcookie("error","żadne pole nazwa parametru nie może być puste",time()+3600*24,"/");
+        header("location: ./../dodajmoto.php");exit();
+    }
 }
 foreach ($_POST['wartosc'] as $value)
 {
     $value=mysqli_real_escape_string($link,$value);
+    if($value=="")
+    {
+        setcookie("error","żadne pole wartość parametru nie może być puste",time()+3600*24,"/");
+        header("location: ./../dodajmoto.php");exit();
+    }
+
 }
 
 
@@ -177,7 +191,7 @@ if($_POST['Cylinder']=='cylinder'){
 
 
 
-
+$_POST['Opis']=mysqli_real_escape_string($link,$_POST['Opis']);
 $_POST['Opis']=addslashes($_POST['Opis']);
 
 
@@ -200,6 +214,30 @@ VALUES ({$_POST['Marka']},'{$_POST['Model']}',{$_POST['Rok']},{$_POST['Naped']},
 }
 else{
     $idmot=$link->insert_id;
+
+// dodawanie dodatkowych parametrów
+
+    for($i=0;$i<$ilosc;$i++)
+    {
+        echo $_POST['wartosc'][$i];
+        $wynik=mysqli_query($link,"Select * from PARAMETR where nazwa_parametru='{$_POST['param'][$i]}'");
+        if($wynik->num_rows==0) {
+            $dodaj = mysqli_query($link, "INSERT into PARAMETR (nazwa_parametru) VALUES ('{$_POST['param'][$i]}')");
+            $iddod=$link->insert_id;
+            $wstaw=mysqli_query($link,"INSERT into WART_PARAMETRU(Id_motocykla,Id_parametru,wartosc_parametru) VALUES ({$idmot},{$iddod},'{$_POST['wartosc'][$i]}')");
+        }
+        else
+        {
+            $wiersz=mysqli_fetch_assoc($wynik);
+            $iddod=$wiersz['Id_parametru'];
+            $wartosc=$_POST['wartosc'][$i];
+            $wstaw=mysqli_query($link,"INSERT into WART_PARAMETRU(Id_motocykla,Id_parametru,wartosc_parametru) VALUES ({$idmot},{$iddod},'{$wartosc}')");
+
+        }
+    }
+
+
+
     $zdjecie="zdjecia/".$idmot.".".$extension;
 
     mysqli_query($link,"UPDATE MOTOCYKL set zdjecie = '{$zdjecie}' where Id_motocykla={$idmot}");
