@@ -18,22 +18,35 @@ foreach ($_COOKIE as $k=>$v) {
     $_COOKIE[$k] = mysqli_real_escape_string($link, $v);
 }
 
-    if ($rezultat = $link->query(sprintf("CALL usun_uzytkownika ('%s')",$dane['Id_uzytkownika'])))
-    {
-        $q = mysqli_query($link, "delete from SESJA where id = '{$_COOKIE['id']}' and web = '{$_SERVER['HTTP_USER_AGENT']}';");
-        setcookie("id",0,time()-1);
-        unset($_COOKIE['id']);
-        setcookie("token",0,time()-1);
-        unset($_COOKIE['token']);
-        echo "wylogowano";
-        header('Location: ./../index.php');
-    } else {
 
-        setcookie("error","Użytkownik nie został usunięty",time()+3600*24,"/");
-        header('Location: ./../start.php');
+$query="CALL isSigned($ad_price)";
+
+$kwerenda=sprintf("CALL usun_uzytkownika ('%s')",$dane['Id_uzytkownika']);
+
+        if(!mysqli_query($link,$kwerenda)){
+            if(mysqli_errno($link)==1001){
+                $blad= mysqli_error($connection);
+                setcookie("error",$blad,time()+3600*24,"/");
+                header('Location: ./../start.php');
+
+            }
+        }
+        else{
+
+
+
+
+        $q = mysqli_query($link, "delete from SESJA where id = '{$_COOKIE['id']}' and web = '{$_SERVER['HTTP_USER_AGENT']}';");
+        setcookie("id",0,time()-1,"/");
+        unset($_COOKIE['id']);
+        setcookie("token",0,time()-1,"/");
+        unset($_COOKIE['token']);
+
+            setcookie("sukces","użytkownik został usunięty",time()+3600*24,"/");
+        header('Location: ./../index.php');
     }
 
 $link->close();
-
+exit;
 
 ?>

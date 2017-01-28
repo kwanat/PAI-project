@@ -24,7 +24,6 @@ else {
     unset($_COOKIE['id']);
     setcookie("token",0,time()-1);
     unset($_COOKIE['token']);
-echo "wylogowano";
    header('Location: https://195.64.159.122/wanat/index.php');
 
 }

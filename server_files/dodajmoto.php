@@ -40,6 +40,7 @@ include "skrypty/sprawdz_ciasteczka.php";
 <?php
 if(isset($_COOKIE['error'])) {
 echo "<div class=\"error\" id=\"blad\" >";
+    $_COOKIE['error']=stripslashes(stripslashes(stripslashes($_COOKIE['error'])));
     echo $_COOKIE['error'];
     setcookie("error", 0, time() - 60, '/');
     unset($_COOKIE['error']);

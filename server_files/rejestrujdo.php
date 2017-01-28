@@ -16,6 +16,26 @@ function sprawdzdane($link){
         if ($q->num_rows != 0) {
             throw new Exception("podany login jest już zajęty");
         }
+    if (!preg_match(" /^([\w-\.]+)$/", $_POST['login'])) {
+        throw new Exception("pole login zawiera niedozwolone znaki");
+    }
+
+    if (!preg_match(" /^([\w-\.]+)$/", $_POST['imie'])) {
+        throw new Exception("pole imie zawiera niedozwolone znaki");
+    }
+    if (!preg_match(" /^([\w-\.]+)$/", $_POST['nazwisko'])) {
+        throw new Exception("pole nazwisko zawiera niedozwolone znaki");
+    }
+    if (!preg_match(" /^([\w-\.@_]+)$/", $_POST['email'])) {
+        throw new Exception("pole email zawiera niedozwolone znaki");
+    }
+
+
+
+
+
+
+
     }
 
 $link = @new mysqli($db_host,$db_uzytkownik,$db_haslo,$db_nazwa)or die("błąd połączenia z bazą");
@@ -74,7 +94,7 @@ else {
            // $link->query("Insert into UP(Id_uzytkownika, ID_poziomu_uprawnien) VALUES ({$link->insert_id},3);");
         }
         else
-            setcookie("error","błąd dodawannia użytkownika",time()+3600*24,"/");
+            setcookie("error","błąd dodawania użytkownika",time()+3600*24,"/");
 
 
         header('Location: index.php');

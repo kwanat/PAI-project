@@ -44,7 +44,12 @@ if(isset($_COOKIE['idmot'])) {
         if($value=="")
         {
             setcookie("error","żadne pole nazwa parametru nie może być puste",time()+3600*24,"/");
-            header("location: ./../zmienmotocykl.php");exit();
+            header("location: ./../modyfikujmoto.php");exit();
+        }
+        if (preg_match("/^.*[\"&].*$/", $value)) {
+            setcookie("error", 'jedno z pól nazwa parametru zawiera niedozwolone znaki: " lub &', time() + 3600 * 24, "/");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
     }
     foreach ($_POST['wartosc'] as $value)
@@ -53,7 +58,12 @@ if(isset($_COOKIE['idmot'])) {
         if($value=="")
         {
             setcookie("error","żadne pole wartość parametru nie może być puste",time()+3600*24,"/");
-            header("location: ./../zmienmotocykl.php");exit();
+            header("location: ./../modyfikujmoto.php");exit();
+        }
+        if (preg_match("/^.*[\"&].*$/", $value)) {
+            setcookie("error", 'jedno z pól wartość parametru zawiera niedozwolone znaki: " lub &', time() + 3600 * 24, "/");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
 
     }
@@ -87,7 +97,7 @@ if(isset($_COOKIE['idmot'])) {
             if(!move_uploaded_file($_FILES["Zdjecie"]["tmp_name"],
                 "./../".$zdjecie)) {
                 setcookie("error","błąd przenoszenia pliku",time()+3600*24,"/");
-                header("location: ./../dodajmoto.php"); exit();
+                header("location: ./../modyfikujmoto.php"); exit();
             }
             chmod("./../".$zdjecie,777);
         }
@@ -109,11 +119,27 @@ else
         $_POST['Markanowa']=mysqli_real_escape_string($link,$_POST['Markanowa']);
         if( $_POST['Markanowa']=="") {
             setcookie("error", "pole Marka nie może być puste", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
+        if (preg_match("/^.*[\"&].*$/", $_POST['Markanowa'])) {
+            setcookie("error", "pole Marka zawiera niedozwolone znaki: \" lub &", time() + 3600 * 24, "/");
+            header("location: ./../modyfikujmoto.php");
+            exit;
+        }
+
         mysqli_query($link,"Insert into MARKA(nazwa_marki) values ('{$_POST['Markanowa']}')");
         $_POST['Marka']=$link->insert_id;
     }
+
+
+
+    if (preg_match("/^.*[\"&].*$/", $_POST['Model'])) {
+        setcookie("error", 'pole Model zawiera niedozwolone znaki: " lub &', time() + 3600 * 24, "/");
+        header("location: ./../modyfikujmoto.php");
+        exit;
+    }
+
 
 
 
@@ -122,12 +148,14 @@ else
         $_POST['Roknowy']=mysqli_real_escape_string($link,$_POST['Roknowy']);
         if( $_POST['Roknowy']=="") {
             setcookie("error", "pole Rok nie może być puste", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
 
         if (!preg_match("/^[0-9]{1,4}$/", $_POST['Roknowy'])) {
             setcookie("error", "pole Rok musi być liczbą całkowitą z zakresu 0-9999", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
         mysqli_query($link,"Insert into ROK_PROD(rok) values ('{$_POST['Roknowy']}')");
         $_POST['Rok']=$link->insert_id;
@@ -140,7 +168,13 @@ else
         $_POST['Napednowy']=mysqli_real_escape_string($link,$_POST['Napednowy']);
         if( $_POST['Napednowy']=="") {
             setcookie("error", "pole Napęd nie może być puste", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
+        }
+        if (preg_match("/^.*[\"&].*$/", $_POST['Napednowy'])) {
+            setcookie("error", "pole naped zawiera niedozwolone znaki: \" lub &", time() + 3600 * 24, "/");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
         mysqli_query($link,"Insert into NAPED(rodzaj_napedu) values ('{$_POST['Napednowy']}')");
         $_POST['Naped']=$link->insert_id;
@@ -154,7 +188,13 @@ else
         $_POST['Typnowy']=mysqli_real_escape_string($link,$_POST['Typnowy']);
         if( $_POST['Typnowy']=="") {
             setcookie("error", "pole typ nie może być puste", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
+        }
+        if (preg_match("/^.*[\"&].*$/", $_POST['Typnowy'])) {
+            setcookie("error", "pole Typ motocykla zawiera niedozwolone znaki: \" lub &", time() + 3600 * 24, "/");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
         mysqli_query($link,"Insert into TYP_MOTOCYKLA(nazwa_typu) values ('{$_POST['Typnowy']}')");
         $_POST['Typ']=$link->insert_id;
@@ -167,12 +207,14 @@ else
         $_POST['Pojemnoscnowa']=mysqli_real_escape_string($link,$_POST['Pojemnoscnowa']);
         if( $_POST['Pojemnoscnowa']=="") {
             setcookie("error", "pole Pojemność nie może być puste", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
 
         if (!preg_match("/^[0-9]{1,4}$/", $_POST['Pojemnoscnowa'])) {
             setcookie("error", "pole Pojemność musi być liczbą całkowitą z zakresu 0-9999", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
         mysqli_query($link,"Insert into POJ_SILNIKA(liczba_ccm) values ('{$_POST['Pojemnoscnowa']}')");
         $_POST['Pojemnosc']=$link->insert_id;
@@ -185,12 +227,14 @@ else
         $_POST['Suwnowy']=mysqli_real_escape_string($link,$_POST['Suwnowy']);
         if( $_POST['Suwnowy']=="") {
             setcookie("error", "pole liczba suwów nie może być puste", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
 
         if (!preg_match("/^[0-9]{1}$/", $_POST['Suwnowy'])) {
             setcookie("error", "pole liczba suwów musi być liczbą całkowitą z zakresu 0-9", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
         mysqli_query($link,"Insert into SUW(liczba_suwów) values ('{$_POST['Suwnowy']}')");
         $_POST['Suw']=$link->insert_id;
@@ -202,19 +246,27 @@ else
         $_POST['Cylindernowy']=mysqli_real_escape_string($link,$_POST['Cylindernowy']);
         if( $_POST['Cylindernowy']=="") {
             setcookie("error", "pole liczba cylindrów nie może być puste", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
 
         if (!preg_match("/^[0-9]{1,4}$/", $_POST['Cylindernowy'])) {
             setcookie("error", "pole liczba cylindrów musi być liczbą całkowitą z zakresu 0-99", time() + 3600 * 24, "/");
-            header("location: ./../zmienmotocykl.php");
+            header("location: ./../modyfikujmoto.php");
+            exit;
         }
         mysqli_query($link,"Insert into CYLINDER(liczba_cylindrów) values ('{$_POST['Cylindernowy']}')");
         $_POST['Cylinder']=$link->insert_id;
+
     }
 
-
-
+/*
+    if (preg_match("/^.*[\"&].*$/", $_POST['Opis'])) {
+        setcookie("error", "pole opis zawiera niedozwolone znaki: \" lub &", time() + 3600 * 24, "/");
+        header("location: ./../modyfikujmoto.php");
+        exit;
+    }
+*/
 
    $_POST['Opis']=mysqli_real_escape_string($link,$_POST['Opis']);
     $_POST['Opis']=addslashes($_POST['Opis']);
@@ -235,24 +287,22 @@ Id_pojemnosci={$_POST['Pojemnosc']},Id_suwu={$_POST['Suw']},Id_cylindra={$_POST[
 
         for($i=0;$i<$ilosc;$i++)
         {
-            echo $_POST['wartosc'][$i];
+
             $wynik=mysqli_query($link,"Select * from PARAMETR where nazwa_parametru='{$_POST['param'][$i]}'");
             if($wynik->num_rows==0) {
                 $dodaj = mysqli_query($link, "INSERT into PARAMETR (nazwa_parametru) VALUES ('{$_POST['param'][$i]}')");
                 $iddod=$link->insert_id;
-                $wstaw=mysqli_query($link,"INSERT into WART_PARAMETRU(Id_motocykla,Id_parametru,wartosc_parametru) VALUES ({$idmot},{$iddod},'{$_POST['wartosc'][$i]}')");
+                $wstaw=mysqli_query($link,"INSERT into WART_PARAMETRU(Id_motocykla,Id_parametru,wartosc_parametru) VALUES ({$id},{$iddod},'{$_POST['wartosc'][$i]}')");
             }
             else
             {
                 $wiersz=mysqli_fetch_assoc($wynik);
                 $iddod=$wiersz['Id_parametru'];
                 $wartosc=$_POST['wartosc'][$i];
-                $wstaw=mysqli_query($link,"INSERT into WART_PARAMETRU(Id_motocykla,Id_parametru,wartosc_parametru) VALUES ({$idmot},{$iddod},'{$wartosc}')");
+                $wstaw=mysqli_query($link,"INSERT into WART_PARAMETRU(Id_motocykla,Id_parametru,wartosc_parametru) VALUES ({$id},{$iddod},'{$wartosc}')");
 
             }
         }
-
-
 
 
 

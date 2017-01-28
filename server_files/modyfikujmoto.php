@@ -35,6 +35,7 @@ include "skrypty/sprawdz_ciasteczka.php";
 <?php
 if(isset($_COOKIE['error'])) {
     echo "<div class=\"error\" id=\"error\" >";
+    $_COOKIE['error']=stripslashes(stripslashes(stripslashes($_COOKIE['error'])));
     echo $_COOKIE['error'];
     setcookie("error", 0, time() - 60, '/');
     unset($_COOKIE['error']);
@@ -57,15 +58,15 @@ include "polacz.php";
 $link = mysqli_connect($db_host,$db_uzytkownik,$db_haslo,$db_nazwa) or die("błąd połączenia z bazą danych");
 mysqli_query($link,"SET CHARSET utf8");
 mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
-$wynik=mysqli_query($link,"Select Zdjecie, Model, Rok_produkcji from dane_motocykl;");
+$wynik=mysqli_query($link,"Select Id_motocykla, Zdjecie, Model, Rok_produkcji from dane_motocykl;");
 ?>
 
 
 
 <div class="container max-container">
-<div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 max-div center">
+<div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-1 col-md-offset-1 col-sm-offset-3 col-xs-offset-1 max-div center">
 
-    <form class="pagination" action="zmienmotocykl.php" method="get" role="form" style="background: rgba(177, 177, 177, 0.9)">
+    <form class="pagination" action="zmienmotocykl.php" method="post" role="form" style="background: rgba(177, 177, 177, 0.9)">
 <div class="text-center">Wyszukaj motocykl</div>
         <div class="form-group" >
             <label for="model">Model:</label><br>
@@ -81,9 +82,7 @@ $wynik=mysqli_query($link,"Select Zdjecie, Model, Rok_produkcji from dane_motocy
 
     </form>
 </div>
-</div>
-<div class="container max-container">
-    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 max-div">
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-2 col-md-offset-2 col-sm-offset-3 col-xs-offset-1 max-div">
 
     <div style="overflow: auto">
         <table class="table">
@@ -96,12 +95,13 @@ $wynik=mysqli_query($link,"Select Zdjecie, Model, Rok_produkcji from dane_motocy
 
             <?php
             while($mot=mysqli_fetch_assoc($wynik)){
+                $id=$mot['Id_motocykla'];
                 foreach($mot as $k=>$v){
-                    $mot[$k]=htmlentities($v);
+                    $mot[$k]=stripslashes(htmlentities($v));
                 }
                 echo " <tr style='font-size: 20px'>
                 <td style='vertical-align: middle'><img src=\"{$mot['Zdjecie']}\" width='100px'></td>
-                <td style='vertical-align: middle'><a style=\"color: black\" class=\"link\" href=\"zmienmotocykl.php?model={$mot['Model']}&rok={$mot['Rok_produkcji']}\">{$mot['Model']}</a></td>
+                <td style='vertical-align: middle'><a style=\"color: black\" class=\"link\" href=\"zmienmotocykl.php?id={$id}\">{$mot['Model']}</a></td>
                 <td style='vertical-align: middle'>{$mot['Rok_produkcji']}</td>
             </tr>";
             }
@@ -113,7 +113,8 @@ $wynik=mysqli_query($link,"Select Zdjecie, Model, Rok_produkcji from dane_motocy
         </table>
     </div>
 </div>
-</div>
+    </div>
+
 
 </body>
 

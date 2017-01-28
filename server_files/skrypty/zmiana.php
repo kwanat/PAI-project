@@ -34,6 +34,7 @@ else if($typ=="modus")
     mysqli_query($link,"Delete from UP where Id_uzytkownika={$id} and ID_poziomu_uprawnien=2");
 else if($typ=="moddod")
     mysqli_query($link,"Insert into UP(Id_uzytkownika, ID_poziomu_uprawnien) VALUES({$id},2)");
-header('Location: ./../szukaj_login.php');
+setcookie("sukces","uprawnienia zostały zmienione",time()+3600*24,"/");
+header('Location: ./../start.php');
 
 ?>

@@ -47,7 +47,7 @@ mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
 $marka=mysqli_real_escape_string($link, $_GET['marka']);
 //echo $marka;
-$wynik=mysqli_query($link,"Select Zdjecie, Model, Rok_produkcji from dane_motocykl where Marka='{$marka}';");
+$wynik=mysqli_query($link,"Select Id_motocykla, Zdjecie, Model, Rok_produkcji from dane_motocykl where Marka='{$marka}';");
 ?>
 <div class="container max-container">
     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 col-lg-offset-4 col-md-offset-4 col-sm-offset-3 col-xs-offset-1 max-div">
@@ -61,12 +61,13 @@ $wynik=mysqli_query($link,"Select Zdjecie, Model, Rok_produkcji from dane_motocy
 
             <?php
             while($mot=mysqli_fetch_assoc($wynik)){
+                $id=$mot['Id_motocykla'];
                 foreach($mot as $k=>$v){
-                    $mot[$k]=htmlentities($v);
+                    $mot[$k]=stripslashes(htmlentities($v));
                 }
                 echo " <tr style='font-size: 20px'>
                 <td style='vertical-align: middle'><img src=\"{$mot['Zdjecie']}\" width='100px'></td>
-                <td style='vertical-align: middle'><a style=\"color: black\" class=\"link\" href=\"wypisz_motocykl.php?model={$mot['Model']}&rok={$mot['Rok_produkcji']}\">{$mot['Model']}</a></td>
+                <td style='vertical-align: middle'><a style=\"color: black\" class=\"link\" href=\"wypisz_motocykl.php?id={$id}\">{$mot['Model']}</a></td>
                 <td style='vertical-align: middle'>{$mot['Rok_produkcji']}</td>
             </tr>";
             }

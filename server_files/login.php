@@ -33,6 +33,8 @@ else
     //zabezpieczenia przes]d SQL-Injection
     $login=mysqli_real_escape_string($polaczenie,$login);
     $login=htmlentities($login, ENT_QUOTES,"UTF-8");
+    //$login=addslashes($login);
+
 
 
     //hashowanie hasła z solą
@@ -53,7 +55,7 @@ else
             mysqli_query($polaczenie, "insert into SESJA (Id_uzytkownika, id, ip, web,token) values 
 	          ('{$licznik['Id_uzytkownika']}','{$id}','{$_SERVER['REMOTE_ADDR']}','{$_SERVER['HTTP_USER_AGENT']}','{$token}')");
 
-            echo $token;
+            //echo $token;
 
             if (!mysqli_errno($polaczenie)){
                 setcookie("id", $id, time()+3600*24,"/");

@@ -56,12 +56,25 @@ $link = mysqli_connect($db_host,$db_uzytkownik,$db_haslo,$db_nazwa) or die("bł�
 mysqli_query($link,"SET CHARSET utf8");
 mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
 
-$model=mysqli_real_escape_string($link,$_GET['model']);
-$rok=mysqli_real_escape_string($link,$_GET['rok']);
+
+if((isset($_POST['rok']))&&(isset($_POST['model'])))
+{
+    $_POST['rok']=mysqli_real_escape_string($link,$_POST['rok']);
+    $_POST['model']=mysqli_real_escape_string($link,$_POST['model']);
+
+    $q=mysqli_query($link,"SELECT Id_motocykla from dane_motocykl where Model='{$_POST['model']}' and Rok_produkcji={$_POST['rok']}");
+    if($q->num_rows==1) {
+        $id = mysqli_fetch_assoc($q);
+        $id = $id['Id_motocykla'];
+    }
+    else
+        $id=0;
+}
+else
+    $id=mysqli_real_escape_string($link,$_GET['id']);
 
 
-
-$q=mysqli_query($link,"Select * from dane_motocykl where Model='{$model}' and Rok_produkcji={$rok};");
+$q=mysqli_query($link,"Select * from dane_motocykl where Id_motocykla={$id};");
 if ($q->num_rows != 1) {
     setcookie("error","Nie ma takiego motocykla",time()+3600*24,"/");
     header('Location: modyfikujmoto.php');
@@ -71,7 +84,7 @@ $wynik=mysqli_fetch_assoc($q);
 $w=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from PARAMETR natural join WART_PARAMETRU where Id_motocykla={$wynik['Id_motocykla']}");
 
 $marka=$wynik['Marka'];
-$model=htmlentities($wynik['Model']);
+$model=stripslashes($wynik['Model']);
 $rok=$wynik['Rok_produkcji'];
 $typ=$wynik['Typ_motocykla'];
 $pojemnosc=$wynik['Pojemność_silnika'];
@@ -103,12 +116,12 @@ setcookie('idmot',$id,time()+3600,"/");
                     <?php
                     $wynik=mysqli_query($link,"Select * from MARKA");
                     $wynik2=mysqli_fetch_assoc(mysqli_query($link,"Select * from MARKA where nazwa_marki='{$marka}'"));
-                    $wynik2['nazwa_marki']=htmlentities($wynik2['nazwa_marki']);
+                    $wynik2['nazwa_marki']=stripslashes(htmlentities($wynik2['nazwa_marki']));
 
                     echo"<option value=\"{$wynik2['Id_marki']}\">{$wynik2['nazwa_marki']}</option>";
                     while($wiersz=mysqli_fetch_assoc($wynik)) {
-                        $wiersz['nazwa_marki'] = htmlentities($wiersz['nazwa_marki']);
-                        if ($wiersz['nazwa_marki'] != htmlentities($marka))
+                        $wiersz['nazwa_marki'] = stripslashes(htmlentities($wiersz['nazwa_marki']));
+                        if ($wiersz['nazwa_marki'] != stripslashes(htmlentities($marka)))
                             echo "<option value=\"{$wiersz['Id_marki']}\">{$wiersz['nazwa_marki']}</option>";
                     }
                     echo"<option value=\"marka\">Inna</option>";
@@ -125,7 +138,7 @@ setcookie('idmot',$id,time()+3600,"/");
             <div class="form-group" >
                 <label for="Model">Model:</label><br>
                 <?php
-                echo "<input class=\"form-control\" id=\"Model\" type=\"text\" name=\"Model\" value='{$model}' required/>";
+                echo "<input class=\"form-control\" id=\"Model\" type=\"text\" name=\"Model\"  required/>";
                 ?>
 
 
@@ -137,11 +150,11 @@ setcookie('idmot',$id,time()+3600,"/");
                     <?php
                     $wynik=mysqli_query($link,"Select * from ROK_PROD");
                     $wynik2=mysqli_fetch_assoc(mysqli_query($link,"Select * from ROK_PROD where rok=$rok"));
-                    $wynik2['rok']=htmlentities($wynik2['rok']);
+                    $wynik2['rok']=stripslashes(htmlentities($wynik2['rok']));
                     echo"<option value=\"{$wynik2['Id_roku']}\">{$wynik2['rok']}</option>";
                     while($wiersz=mysqli_fetch_assoc($wynik)) {
-                        $wiersz['rok'] = htmlentities($wiersz['rok']);
-                        if ($wiersz['rok'] != htmlentities($rok))
+                        $wiersz['rok'] = stripslashes(htmlentities($wiersz['rok']));
+                        if ($wiersz['rok'] != stripslashes(htmlentities($rok)))
                             echo "<option value=\"{$wiersz['Id_roku']}\">{$wiersz['rok']}</option>";
                     }
                     echo"<option value=\"rok\">Inny</option>";
@@ -160,10 +173,10 @@ setcookie('idmot',$id,time()+3600,"/");
                     <?php
                     $wynik=mysqli_query($link,"Select * from NAPED");
                     $wynik2=mysqli_fetch_assoc(mysqli_query($link,"Select * from NAPED where rodzaj_napedu='{$naped}'"));
-                    $wynik2['rodzaj_napedu']=htmlentities($wynik2['rodzaj_napedu']);
+                    $wynik2['rodzaj_napedu']=stripslashes(htmlentities($wynik2['rodzaj_napedu']));
                     echo"<option value=\"{$wynik2['Id_napedu']}\">{$wynik2['rodzaj_napedu']}</option>";
                     while($wiersz=mysqli_fetch_assoc($wynik)) {
-                        $wiersz['rodzaj_napedu'] = htmlentities($wiersz['rodzaj_napedu']);
+                        $wiersz['rodzaj_napedu'] = stripslashes(htmlentities($wiersz['rodzaj_napedu']));
                         if ($wiersz['rodzaj_napedu'] != htmlentities($naped))
                             echo "<option value=\"{$wiersz['Id_napedu']}\">{$wiersz['rodzaj_napedu']}</option>";
                     }
@@ -184,11 +197,11 @@ setcookie('idmot',$id,time()+3600,"/");
                     <?php
                     $wynik=mysqli_query($link,"Select * from TYP_MOTOCYKLA");
                     $wynik2=mysqli_fetch_assoc(mysqli_query($link,"Select * from TYP_MOTOCYKLA where nazwa_typu='{$typ}'"));
-                    $wynik2['nazwa_typu']=htmlentities($wynik2['nazwa_typu']);
+                    $wynik2['nazwa_typu']=stripslashes(htmlentities($wynik2['nazwa_typu']));
                     echo"<option value=\"{$wynik2['Id_typu']}\">{$wynik2['nazwa_typu']}</option>";
                     while($wiersz=mysqli_fetch_assoc($wynik)) {
-                        $wiersz['nazwa_typu'] = htmlentities($wiersz['nazwa_typu']);
-                        if ($wiersz['nazwa_typu'] != htmlentities($typ))
+                        $wiersz['nazwa_typu'] = stripslashes(htmlentities($wiersz['nazwa_typu']));
+                        if ($wiersz['nazwa_typu'] != stripslashes(htmlentities($typ)))
                             echo "<option value=\"{$wiersz['Id_typu']}\">{$wiersz['nazwa_typu']}</option>";
                     }
                     echo"<option value=\"typ\">Inny</option>";
@@ -207,11 +220,11 @@ setcookie('idmot',$id,time()+3600,"/");
                     <?php
                     $wynik=mysqli_query($link,"Select * from POJ_SILNIKA");
                     $wynik2=mysqli_fetch_assoc(mysqli_query($link,"Select * from POJ_SILNIKA where liczba_ccm=$pojemnosc"));
-                    $wynik2['liczba_ccm']=htmlentities($wynik2['liczba_ccm']);
+                    $wynik2['liczba_ccm']=stripslashes(htmlentities($wynik2['liczba_ccm']));
                     echo"<option value=\"{$wynik2['Id_pojemnosci']}\">{$wynik2['liczba_ccm']}</option>";
                     while($wiersz=mysqli_fetch_assoc($wynik)) {
-                        $wiersz['liczba_ccm'] = htmlentities($wiersz['liczba_ccm']);
-                        if ($wiersz['liczba_ccm'] != htmlentities($pojemnosc))
+                        $wiersz['liczba_ccm'] = stripslashes(htmlentities($wiersz['liczba_ccm']));
+                        if ($wiersz['liczba_ccm'] != stripslashes(htmlentities($pojemnosc)))
                             echo "<option value=\"{$wiersz['Id_pojemnosci']}\">{$wiersz['liczba_ccm']}</option>";
                     }
                     echo"<option value=\"pojemnosc\">Inna</option>";
@@ -230,11 +243,11 @@ setcookie('idmot',$id,time()+3600,"/");
                     <?php
                     $wynik=mysqli_query($link,"Select * from SUW");
                     $wynik2=mysqli_fetch_assoc(mysqli_query($link,"Select * from SUW where liczba_suwów=$suw"));
-                    $wynik2['liczba_suwów']=htmlentities($wynik2['liczba_suwów']);
+                    $wynik2['liczba_suwów']=stripslashes(htmlentities($wynik2['liczba_suwów']));
                     echo"<option value=\"{$wynik2['Id_suwu']}\">{$wynik2['liczba_suwów']}</option>";
                     while($wiersz=mysqli_fetch_assoc($wynik)) {
-                        $wiersz['liczba_suwów'] = htmlentities($wiersz['liczba_suwów']);
-                        if ($wiersz['liczba_suwów'] != htmlentities($suw))
+                        $wiersz['liczba_suwów'] = stripslashes(htmlentities($wiersz['liczba_suwów']));
+                        if ($wiersz['liczba_suwów'] != stripslashes(htmlentities($suw)))
                             echo "<option value=\"{$wiersz['Id_suwu']}\">{$wiersz['liczba_suwów']}</option>";
                     }
                     echo"<option value=\"suw\">Inna</option>";
@@ -253,11 +266,11 @@ setcookie('idmot',$id,time()+3600,"/");
                     <?php
                     $wynik=mysqli_query($link,"Select * from CYLINDER");
                     $wynik2=mysqli_fetch_assoc(mysqli_query($link,"Select * from CYLINDER where liczba_cylindrow=$cylindry"));
-                    $wynik2['liczba_cylindrow']=htmlentities($wynik2['liczba_cylindrow']);
+                    $wynik2['liczba_cylindrow']=stripslashes(htmlentities($wynik2['liczba_cylindrow']));
                     echo"<option value=\"{$wynik2['Id_cylindra']}\">{$wynik2['liczba_cylindrow']}</option>";
                     while($wiersz=mysqli_fetch_assoc($wynik)) {
-                        $wiersz['liczba_cylindrow'] = htmlentities($wiersz['liczba_cylindrow']);
-                        if ($wiersz['liczba_cylindrow'] != htmlentities($cylindry))
+                        $wiersz['liczba_cylindrow'] = stripslashes(htmlentities($wiersz['liczba_cylindrow']));
+                        if ($wiersz['liczba_cylindrow'] != stripslashes(htmlentities($cylindry)))
                             echo "<option value=\"{$wiersz['Id_cylindra']}\">{$wiersz['liczba_cylindrow']}</option>";
                     }
                     echo"<option value=\"cylinder\">Inna</option>";
@@ -294,11 +307,11 @@ setcookie('idmot',$id,time()+3600,"/");
                 $param=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from WART_PARAMETRU NATURAL JOIN PARAMETR where Id_motocykla={$id} ");
                 $parametr=mysqli_query($link,"Select * from PARAMETR");
                 while($wynik=mysqli_fetch_assoc($param)) {
-                    $wynik['nazwa_parametru']=htmlentities($wynik['nazwa_parametru']);
-                    $wynik['wartosc_parametru']=htmlentities($wynik['wartosc_parametru']);
+                    $wynik['nazwa_parametru']=stripslashes(htmlentities($wynik['nazwa_parametru']));
+                    $wynik['wartosc_parametru']=stripslashes(htmlentities($wynik['wartosc_parametru']));
                     echo "<div><label for=\"param\">Nazwa parametru:</label><br><input list=\"params\" name=\"param[]\" id=\"param\" value='{$wynik['nazwa_parametru']}'><datalist id=\"params\">";
                 while($par=mysqli_fetch_assoc($parametr)) {
-                    $par['nazwa_parametru'] = htmlentities($par['nazwa_parametru']);
+                    $par['nazwa_parametru'] = stripslashes(htmlentities($par['nazwa_parametru']));
                     echo "<option value=\"{$par['nazwa_parametru']}\">";
                 }
                 echo"</datalist><button type=\"button\" id=\"remScnt\">Usun</button><label for=\"wart\">Wartość parametru:</label><br><input class=\"form - control\" id=\"wart\" type=\"text\" name=\"wartosc[]\" value='{$wynik['wartosc_parametru']}'/><br></div><br>";
@@ -332,6 +345,7 @@ setcookie('idmot',$id,time()+3600,"/");
 
 
      document.getElementById("Opis").innerHTML="<?php echo $opis;?>";
+     document.getElementById("Model").value="<?php echo $model;?>";
 
     function dodajparametr(){
         <?php
@@ -342,7 +356,7 @@ setcookie('idmot',$id,time()+3600,"/");
         var div = $('#parametry');
         div.append('<div><label for=\"param\">Nazwa parametru:</label><br><input list=\"params\" name=\"param[]\" id=\"param\"><datalist id=\"params\"><?php
             while($par=mysqli_fetch_assoc($parametr)) {
-                $par['nazwa_parametru']=htmlentities($par['nazwa_parametru']);
+                $par['nazwa_parametru']=stripslashes(htmlentities($par['nazwa_parametru']));
                 echo "<option value=\"{$par['nazwa_parametru']}\">";
             }?></datalist><button type="button" id="remScnt">Usun</button><label for=\"wart\">Wartość parametru:</label><br><input class=\"form-control\" id=\"wart\" type=\"text\" name=\"wartosc[]\" /><br></div>');
 

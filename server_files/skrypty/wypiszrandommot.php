@@ -11,9 +11,9 @@ if ($q->num_rows != 1) {
     exit();
 }
 $wynik=mysqli_fetch_assoc($q);
-
+$opis=htmlentities($wynik['Opis']);
 foreach($wynik as $k=>$v){
-$wynik[$k]=htmlentities($v);
+$wynik[$k]=stripslashes(htmlentities($v));
 }
 
 
@@ -54,9 +54,9 @@ $w=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from PARAMETR n
                 echo "<li class=\"list-group-item text-center\" >DANE DODATKOWE</li>";
                 while($dana=mysqli_fetch_assoc($w))
                 {
-			$dana['nazwa_parametru']=htmlentities($dana['nazwa_parametru']);
-			$dana['wartosc_parametru']=htmlentities($dana['wartosc_parametru']);
-                    echo "<li class=\"list-group-item\">htmlentities({$dana['nazwa_parametru']}): htmlentities({$dana['wartosc_parametru']})</li>";
+                    $dana['nazwa_parametru']=stripslashes(htmlentities($dana['nazwa_parametru']));
+                    $dana['wartosc_parametru']=stripslashes(htmlentities($dana['wartosc_parametru']));
+                    echo "<li class=\"list-group-item\">{$dana['nazwa_parametru']}: {$dana['wartosc_parametru']}</li>";
                 }
             }
             ?>
@@ -64,9 +64,10 @@ $w=mysqli_query($link,"Select nazwa_parametru, wartosc_parametru from PARAMETR n
         <ul class="list-group">
 
             <?php
-            $wynik['Opis']=str_replace('\r\n','<br>',$wynik['Opis']);
+
+            $opis=stripslashes(str_replace('\r\n','<br>',$opis));
             echo "<li class=\"list-group-item text-center\" >OPIS</li>";
-            echo "<li class=\"list-group-item\">{$wynik['Opis']}</li>";
+            echo "<li class=\"list-group-item\">{$opis}</li>";
             ?>
         </ul>
      </div>
