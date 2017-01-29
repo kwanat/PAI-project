@@ -43,13 +43,23 @@ else
 
 
     $licznik=mysqli_fetch_assoc(mysqli_query
-    ($polaczenie, "SELECT count(*) cnt, Id_uzytkownika FROM UZYTKOWNIK WHERE login='$login' AND haslo='$haslo'"));
+    ($polaczenie, "SELECT count(*) cnt, Id_uzytkownika,data_blednego_logowania,bledne_logowania FROM UZYTKOWNIK WHERE login='$login' AND haslo='$haslo'"));
 
 
         if($licznik['cnt']){
 
             $id = md5(rand(-10000,10000) . microtime()) . md5(crc32(microtime()) . $_SERVER['REMOTE_ADDR']);
             $token=randomString(10);
+
+
+            $limit_prob=5;
+            $czasblokady=60*3;
+
+            if(($licznik['bledne_logowania']>=$limit_prob)&&(time()-strtotime($licznik['data_blednego_logowania'])<$czasblokady)) {
+                setcookie("error","jesteś zablokowany, odczekaj 10 minut",time()+3600*24,"/");
+                header("location: index.php");
+                exit;
+            }
 
             mysqli_query($polaczenie, "delete from SESJA where Id_uzytkownika = '$licznik[Id_uzytkownika]';");
             mysqli_query($polaczenie, "insert into SESJA (Id_uzytkownika, id, ip, web,token) values 
@@ -58,6 +68,7 @@ else
             //echo $token;
 
             if (!mysqli_errno($polaczenie)){
+                mysqli_query($polaczenie,"UPDATE UZYTKOWNIK SET bledne_logowania=1 where login='{$login}'");
                 setcookie("id", $id, time()+3600*24,"/");
                 setcookie("token", $token, time()+3600*24,"/");
                 echo "zalogowano pomyślnie!";
@@ -69,13 +80,43 @@ else
             }
 
         } else {
-            setcookie("error","Niepoprawny login lub hasło",time()+3600*24,"/");
-                header('Location: index.php');
+            $limit_prob=5;
+            $czasblokady=60*3;
 
+
+            $kwerenda=mysqli_query($polaczenie,"SELECT data_blednego_logowania, bledne_logowania FROM UZYTKOWNIK WHERE login='{$login}'");
+            if($kwerenda->num_rows>0) {
+                $wiersz=mysqli_fetch_assoc($kwerenda);
+                if(($wiersz['bledne_logowania']>=$limit_prob)&&(time()-strtotime($wiersz['data_blednego_logowania'])<$czasblokady)) {
+                    setcookie("error","jesteś zablokowany, odczekaj 10 minut",time()+3600*24,"/");
+                    header("location: index.php");
+                    exit;
+                }
+                else {
+                    if(time()-strtotime($wiersz['data_blednego_logowania'])>$czasblokady) {
+                        mysqli_query($polaczenie,"UPDATE UZYTKOWNIK SET data_blednego_logowania=SYSDATE(),bledne_logowania=1 where login='{$login}'");
+                    }
+                    else
+                        mysqli_query($polaczenie,"UPDATE UZYTKOWNIK SET bledne_logowania=bledne_logowania+1 where login='{$login}'");
+                }
+            }
+            else {
+            setcookie("error","nie znaleziono użytkownika",time()+3600*24,"/");
+                header("location: index.php");
+                exit;
+            }
+
+        }
+    setcookie("error","Niepoprawny login lub hasło",time()+3600*24,"/");
+    header('Location: index.php');
         }
 
 
+
+
+
+
      $polaczenie->close();
-}
+
 
 ?>

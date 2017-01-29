@@ -1,7 +1,7 @@
 <?php
 //TODO
 
-
+include_once "skrypty/sprawdz_logowanie.php";
 header("Cache-Control: no-store, no-cache, must-revalidate");
 header("Cache-Control: post-check=0, pre-check=0, max-age=0", false);
 header("Pragma: no-cache");
@@ -11,7 +11,7 @@ if(!isset($_COOKIE['id']))
 
 include_once "funkcje.php";
 require_once "polacz.php";
-include_once "skrypty/sprawdz_logowanie.php";
+
 
 
 ?>

@@ -18,9 +18,16 @@ $idmoto=$_GET['idmoto'];
 $tresc=$_GET['tresc'];
 $idnad=$_GET['idnad'];
 
+if($tresc=="")
+{
+    echo"odpowiedź nie może być pusta";
+    exit;
+}
+
+
 if($wynik=mysqli_query($link,"Insert into KOMENTARZ(Id_motocykla,Id_uzytkownika, Id_komentarza_fk, tresc) VALUES ({$idmoto},{$dane['Id_uzytkownika']},{$idnad},'{$tresc}')"))
     echo "true";
 else
-    echo "false";
+    echo "nie udało się dodać odpowiedzi";
 
 ?>

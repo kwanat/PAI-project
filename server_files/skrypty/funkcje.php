@@ -11,4 +11,9 @@ function randomString($length, $pattern='abcdefghijklmnoprstuvwxyz1234567890!?')
     }
     return $random_string;
 }
+
+
+
 ?>
+
+

@@ -1,9 +1,7 @@
 <?php
-
-
 if(isset($_COOKIE['id'])) {
 
-
+//sleep(5);
     include_once "funkcje.php";
     include_once "polacz.php";
 
@@ -16,7 +14,6 @@ if(isset($_COOKIE['id'])) {
         $_SERVER[$k] = mysqli_real_escape_string($link, $v);
     }
 
-
     $q = mysqli_query($link, "select Id_uzytkownika, token from SESJA where 
 id = '{$_COOKIE['id']}' and web = '{$_SERVER['HTTP_USER_AGENT']}' AND ip = '{$_SERVER['REMOTE_ADDR']}';");
 
@@ -24,8 +21,9 @@ id = '{$_COOKIE['id']}' and web = '{$_SERVER['HTTP_USER_AGENT']}' AND ip = '{$_S
         $row=mysqli_fetch_assoc($q);
         if ($_COOKIE['token'] == $row['token']) {
             $token = randomString(10);
-            setcookie('token', $token,time()+3600*24,"/");
-            mysqli_query($link, "update SESJA set token='$token' where id='$_COOKIE[id]';");
+         //   setcookie('token', $token,time()+3600*24,"/");
+          //  mysqli_query($link, "update SESJA set token='$token' where id='$_COOKIE[id]';");
+
         } else {
 
             mysqli_query($link, "delete from SESJA where id={$_COOKIE['id']};");
@@ -47,6 +45,7 @@ id = '{$_COOKIE['id']}' and web = '{$_SERVER['HTTP_USER_AGENT']}' AND ip = '{$_S
         exit;
 
     }
+
     $link->close();
 }
 else

@@ -17,9 +17,17 @@ foreach ($_GET as $k=>$v) {
 $idmoto=$_GET['id'];
 $tresc=$_GET['tresc'];
 
+
+if($tresc=="")
+{
+    echo"komentarz nie może być pusty";
+    exit;
+}
+
+
 if($wynik=mysqli_query($link,"Insert into KOMENTARZ(Id_motocykla,Id_uzytkownika,tresc) VALUES ({$idmoto},{$dane['Id_uzytkownika']},'{$tresc}')"))
     echo "true";
 else
-    echo "false";
+    echo "nie udało się dodać komentarza";
 
 ?>

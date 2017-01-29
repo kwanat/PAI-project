@@ -28,6 +28,9 @@ else
 require_once "polacz.php";
 include "skrypty/sprawdz_ciasteczka.php";
 
+
+
+
 $link = mysqli_connect($db_host, $db_uzytkownik, $db_haslo, $db_nazwa) or die("brak połączenia z bazą");
 mysqli_query($link,"SET CHARSET utf8");
 mysqli_query($link,"SET NAMES `utf8` COLLATE `utf8_polish_ci`");
@@ -53,6 +56,10 @@ $wynik[$k]=stripslashes(htmlentities($v));
 
 
 ?>
+
+<div class="error" id="error" style="display: none">
+</div>
+
 <div class="container max-container" style="width: 100%">
     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-10 max-div">
         <ul class="list-group">
@@ -127,7 +134,7 @@ $wynik[$k]=stripslashes(htmlentities($v));
                 echo "{$kom['tresc']}";
                 echo "</div>";
                 echo "<div class=\"comment-content\" id=\"{$kom['Id_komentarza']}\" style=\"display: none\" >";
-                echo "<textarea  class=\"form-control\" placeholder='Dodaj odpowiedź' ></textarea>";
+                echo "<textarea  class=\"form-control\" placeholder='Dodaj odpowiedź' onblur=\"sprawdzodpowiedz('{$kom['Id_komentarza']}')\"></textarea>";
                 echo "<button style=\"text-align: center\" onclick=\"dodajodpowiedz('{$kom['Id_komentarza']}')\">Dodaj</button>";
                 echo "</div>";
                 echo "</div></div>";
@@ -149,7 +156,7 @@ $wynik[$k]=stripslashes(htmlentities($v));
             }
 
             echo " </ul>";
-            echo "<textarea id=\"nowykomentarz\" class=\"form-control\" placeholder='Dodaj komentarz' style=\"resize: none\"></textarea>";
+            echo "<textarea id=\"nowykomentarz\" class=\"form-control\" placeholder='Dodaj komentarz' style=\"resize: none\" onblur='sprawdzkomentarz()'></textarea>";
             echo "<button style=\"text-align: center\" id='nowykoment' onclick='dodajkom()'>Dodaj</button>";
             echo "</div></div>";
         }
@@ -188,7 +195,9 @@ $wynik[$k]=stripslashes(htmlentities($v));
 
                 }
                 else{
-                    alert("nie można dodać komentarza");
+
+                    document.getElementById("error").innerHTML=data;
+                    document.getElementById("error").style="block";
                 }
             }
         });
@@ -216,7 +225,8 @@ $wynik[$k]=stripslashes(htmlentities($v));
 
                 }
                 else{
-                    alert(data);
+                    document.getElementById("error").innerHTML=data;
+                    document.getElementById("error").style="block";
                 }
             }
         });
@@ -224,5 +234,37 @@ $wynik[$k]=stripslashes(htmlentities($v));
 
 
 
+function sprawdzkomentarz(){
+    var tresc=document.getElementById("nowykomentarz").value;
+    if(tresc=="")
+    {
+        document.getElementById("error").innerHTML="komentarz nie może być pusty"
+        document.getElementById("error").style.display="block";
+    }
+    else
+    {
+        document.getElementById("error").innerHTML="";
+        document.getElementById("error").style.display="none";
+    }
+
+
+}
+
+
+    function sprawdzodpowiedz(id){
+        var tresc=document.getElementById(id).firstElementChild.value;
+        if(tresc=="")
+        {
+            document.getElementById("error").innerHTML="odpowiedz nie może być pusta";
+            document.getElementById("error").style.display="block";
+        }
+        else
+        {
+            document.getElementById("error").innerHTML="";
+            document.getElementById("error").style.display="none";
+        }
+
+
+    }
 
 </script>
